@@ -4,7 +4,9 @@ Reinforcement Learning - EL2805
 
 ## LABs
 - [ ] Lab 0
-    - [ ] Task 1
+    - [ ] Probelm 1
+    - [ ] Probelm 2
+    - [ ] Probelm 3
 - [ ] Lab 1
 - [ ] Lab 2
 
