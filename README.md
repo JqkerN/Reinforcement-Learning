@@ -4,9 +4,9 @@ Reinforcement Learning - EL2805
 
 ## LABs
 - [ ] Lab 0
-    - [ ] Probelm 1
-    - [ ] Probelm 2
-    - [ ] Probelm 3
+    - [ ] Problem 1
+    - [ ] Problem 2
+    - [ ] Problem 3
 - [ ] Lab 1
 - [ ] Lab 2
 
