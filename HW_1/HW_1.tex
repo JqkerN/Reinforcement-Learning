@@ -49,7 +49,7 @@ The probability to go from one state to a more worn state when continuing is mod
 		        \end{bmatrix}
 \]
 \subsection*{b)}
-\textbf{Bellman equation:} $u_{t}^{\star}\left(s_{t}\right)=\max _{a \in A_{s_{t}}}\left[r_{t}\left(s_{t}, a\right)+\sum_{j \in S} p_{t}\left(j \mid s_{t}, a\right) u_{t+1}^{\star}\left(s_{t}, a, j\right)\right]$
+\textbf{Bellman equation:} $u_{t}^{\star}\left(s_{t}\right)=\max _{a \in A_{s_{t}}}\left[r_{t}\left(s_{t}, a\right)+\sum_{j \in S} p_{t}\left(j \mid s_{t}, a\right) u_{t+1}^{\star}\left(j\right)\right]$
 
 \subsubsection*{Solution:}
 \begin{equation}
@@ -125,31 +125,36 @@ $$a^*_0(Broken)=Replace$$
 \section{Optimal Stopping}
 \subsection*{a)}
 \subsubsection*{Motivation:}
-The number of possible states for the MDP are equal to the number of tosses, where each toss can generate a new head, i.e. $S = \{(0,0),(n, t) \; \text{for} \; n,t\in T\}$. The probability to move to a state with a higher number of heads than current state will be equal to $0.5$ due to fair coin. Furthermore, the probabilty to stay in the current state will be equal to $0.5$ as well. The reward for stopping will be proportional to the number of head ($n$) divided by the number of tosses ($t$), i.e. calculate the final score as $r(S_i, A_S) = \frac{n}{t} \; \forall \; S_i \in S$. The reward for continue will be equal to zero, $r(S_i, A_C) = 0 \; \forall \; S_i \in S $ due to we will not receive any reward for continuing tossing the coin.
+The number of possible states for the MDP are correlated to the number of tosses, where each toss can generate a new head, i.e. $S = \{\Theta ,(n, t) \; \text{for} \; n,t\in [0,T] \; \text{and} \; n\leq t\}$ Where $\Theta$ is an empty set(Null space). The probability to move to a state with a higher number of heads than current state will be equal to $0.5$ due to fair coin. Furthermore, the probability to move to a state with the same number of heads state will be equal to $0.5$ as well. The reward for stopping will be proportional to the number of head ($n$) divided by the number of tosses ($t$), i.e. calculate the final score as $r(S_i, A_S) = \frac{n}{t} \; \forall \; S_i \in S$. The reward for continue will be equal to zero, $r(S_i, A_C) = 0 \; \forall \; S_i \in S $ due to we will not receive any reward for continuing tossing the coin. The number of states will be equal to an under triangular matrix such as, 
 
-The number of states will be equal to an under triangular matrix such as, 
 \[
-A_{Tx T} = \begin{bmatrix} 
-    (n=0,t=0) &  & n/s \\
+S_{T\times T} = \begin{bmatrix} 
+    (t=0, n=0) &  & n.v.s. \\
     \vdots & \ddots & \\
-    (n=0, t=T) & \dots&(n=T,t=T) 
+    (t=T, n=0) & \dots& (t=T, n=T) 
     \end{bmatrix}
 \]
-Where  $n/s=\text{not a state}$.
+Where  $n.v.s. =\text{not a valid state}$ for all of the over diagonal elements.
 
-\textbf{Summarized}\\
-\textbf{States:} $S = \{(0,0),(n, t) \; \text{for} \; n,t\in T\}$ \\
+\textbf{Summary}\\
+\textbf{States:} $S = \{\Theta ,(n, t) \; \text{for} \; n,t\in [0,T] \; \text{and} \; n\leq t\}$ Where $\Theta$ is an empty set(Null space).\\
 \textbf{Actions:} $A = \{A_C(continue), A_S(stop)\}$ \\
 \textbf{Rewards:}  $r(S_i, A_C) = 0$ and $r(S_i, A_S) = \frac{n}{t}$ $ \; \forall \; S_i \in S$  \\
+\textbf{Transition probability:} $p(t+1, n+1|t, n, A_C)=p(t+1, n|t, n, A_C)=0.5$
 
 
+\textbf{Bellman´s Equation:}
 
-
-
-
+\begin{equation}
+    u_{t}^{*}(t,n) = \max
+    \left\{\begin{matrix}
+    A_C: &  0.5 \cdot\left( u_{t+1}^{\star}\left(t+1 ,n+1\right) + u_{t+1}^{\star}\left(t+1 ,n\right)\right)\\
+    A_S: &  n/t
+    \end{matrix}\right\}
+\end{equation}
 
 \subsubsection*{Answer:}
-\textit{Number of states:} will be equal to the number of elements in an under triangular matrix with the size TxT, i.e. $\frac{1}{2}T(T+1)$ number of states.
+\textit{Number of states:} will be equal to the number of elements in the under triangular matrix $S_{T\times T}$, i.e. $\frac{1}{2}T(T+1)$ number of states.
 
 \subsection*{b)}
 \subsection*{c)}
