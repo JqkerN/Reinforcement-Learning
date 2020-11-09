@@ -7,196 +7,102 @@ Ilian Corneliussen 950418-2438
 Daniel Hirsch 960202-5737
 """
 import numpy as np
-
+import sys
+# np.set_printoptions(threshold=sys.maxsize) # Allows the whole matriz to be printed.
 
 class Player():
     def __init__(self, pose, nr_states, can_stay=True):
         self.pose = pose
-        if can_stay:
-            self.actions={'left'    : -1,
-                        'right'   : 1,
-                        'up'      : -1,
-                        'down'    : 1,
-                        'stay'    : 0}
-            self.transition_matrix = {  'left' : np.zeros((nr_states, nr_states)),
-                                        'right': np.zeros((nr_states, nr_states)),
-                                        'up'   : np.zeros((nr_states, nr_states)),
-                                        'down' : np.zeros((nr_states, nr_states)),
-                                        'stay' : np.zeros((nr_states, nr_states))}
 
-        else:
-            self.actions={'left'    : -1,
-                        'right'   : 1,
-                        'up'      : -1,
-                        'down'    : 1}
-            self.transition_matrix = {  'left' : np.zeros((nr_states, nr_states)),
-                                        'right': np.zeros((nr_states, nr_states)),
-                                        'up'   : np.zeros((nr_states, nr_states)),
-                                        'down' : np.zeros((nr_states, nr_states))}
+        #             Action      Valid Action          Row Impact       Column Impact
+        self.actions={'left'    : {'valid?' : True,     'row' :  0,      'column' : -1},
+                      'right'   : {'valid?' : True,     'row' :  0,      'column' :  1},
+                      'up'      : {'valid?' : True,     'row' : -1,      'column' :  0},
+                      'down'    : {'valid?' : True,     'row' :  1,      'column' :  0},
+                      'stay'    : {'valid?' : can_stay, 'row' :  0,      'column' :  0}}
 
+        #                         Action   Valid Action           probability matrix
+        self.transition_matrix = {'left' : {'valid?' : True,      'probability': np.zeros((nr_states, nr_states))},
+                                  'right': {'valid?' : True,      'probability': np.zeros((nr_states, nr_states))},
+                                  'up'   : {'valid?' : True,      'probability': np.zeros((nr_states, nr_states))},
+                                  'down' : {'valid?' : True,      'probability': np.zeros((nr_states, nr_states))},
+                                  'stay' : {'valid?' : can_stay,  'probability': np.zeros((nr_states, nr_states))}}
+    
 
-
-class Enviroment():
-    def __init__(self, start=(0,0), goal=(7,6), T=20):
-        # 0=valid space
-        # 1=wall
-        self.map =  np.matrix( [[0, 0, 1, 0, 0, 0, 0, 0],
-                                [0, 0, 1, 0, 0, 1, 0, 0],
-                                [0, 0, 1, 0, 0, 1, 1, 1],
-                                [0, 0, 1, 0, 0, 1, 0, 0],
-                                [0, 0, 0, 0, 0, 0, 0, 0],
-                                [0, 1, 1, 1, 1, 1, 1, 0],
-                                [0, 0, 0, 0, 1, 0, 0, 0]])
-        self.nr_states = self.map.size
-        self.row, self.col = self.map.shape
-        self.start = start
-        self.goal = goal
-        self.human = Player(start, self.nr_states)
-        self.minotaur = Player(goal, self.nr_states, can_stay=False)
-        self.T = T
-
-    def transition_probability(self):
-        # NOTE: HUMAN
-        # Human transition probability: It can move left, right, down, up and stay
-        # at the current position.
-        verbose_human = False # Set to True for prints.
-        for r in range(self.row):
-            for c in range(self.col):
-                nr_possible_moves = 0   # nr of possible moves the minotaur can make at current state
-                moves = []              # The coordinates for that each move.
-                if verbose_human:
-                    print("\n______________________")
-                    print("r: {}, c: {}".format(r,c))
-                for action in self.human.actions:    # Iterate through all of the possible actions
-                    next_move = [r,c]
-
-                    # Wall: not a valid state
-                    if self.map[tuple(next_move)] != 0: 
-                            continue
-
-                    # Right: checks for possible move            
-                    if action == 'right':
-                        next_move[1] += 1
-                        if next_move[1] >= self.col:
-                            break
-                        elif self.map[tuple(next_move)] == 0:
-                            nr_possible_moves += 1
-                            moves.append([action, tuple(next_move)])
-                            break
-
-                    # Left: checks for possible move
-                    if action == 'left':
-                        next_move[1] -= 1
-                        if next_move[1] < 0:
-                            break
-                        elif self.map[tuple(next_move)] == 0:
-                            nr_possible_moves += 1
-                            moves.append([action, tuple(next_move)])
-                            break
-
-                    # Up: checks for possible move
-                    if action == 'down':
-                        next_move[0] += 1
-                        if next_move[0] >= self.row:
-                            break
-                        elif self.map[tuple(next_move)] == 0:
-                            nr_possible_moves += 1
-                            moves.append([action, tuple(next_move)])
-                            break
-
-                    # Down: checks for possible move
-                    if action == 'up':
-                        next_move[0] -= 1
-                        if next_move[0] < 0:
-                            break
-                        elif self.map[tuple(next_move)] == 0:
-                            nr_possible_moves += 1
-                            moves.append([action, tuple(next_move)])
-                            break
-
-                if verbose_human:
-                    print("moves: {} \nNr of possible moves: {}".format(moves, nr_possible_moves))
-
-                for move in moves: 
-                    current_state = r*self.col + c
-                    move_to_state = move[1][0]*self.col + move[1][1]
-                    # print("Action: {},\t Move: {},\t state: {}".format(move[0], move[1], move_to_state))
-                    self.minotaur.transition_matrix[move[0]][current_state, move_to_state] += 1
-        # print(self.minotaur.transition_matrix['left'])
-
-        
-
-
-        # NOTE: MINOTAUR
-        # Minotaur transition probability: It can move left, right, down, up and (ev. stay
-        # at the current position). The minotaur can walk through walls. 
-        verbose = False # Set to True for prints.
-        for r in range(self.row):
-            for c in range(self.col):
-                nr_possible_moves = 0   # nr of possible moves the minotaur can make at current state
+    def generate_transition_probability(self, enviroment, wall_hack=False, verbose=False):
+        """ Description: Creates the transition probability matrix
+            for the human and the beast.
+        """
+        for r in range(enviroment.row):
+            for c in range(enviroment.column):
+                nr_possible_moves = 0   # nr of possible moves the player can make at current state
                 moves = []              # The coordinates for that each move.
                 if verbose:
                     print("\n______________________")
                     print("r: {}, c: {}".format(r,c))
-                for action in self.minotaur.actions:    # Iterate through all of the possible actions
-                    next_move = [r,c]
-                    if self.map[tuple(next_move)] != 0: # If at a wall => not a valid state
+                for action in self.actions:    # Iterate through all of the possible actions
+                    next_move = [r,c]   # Creates the next move
+
+                    # Check that the action is a valid action
+                    if self.actions[action]['valid?'] == False:
+                        continue
+
+                    # Wall: Not a valid state
+                    if enviroment.binary_map[tuple(next_move)] != 0: 
                             continue
 
                     while True:
-                        # Right: checks for possible move
-                        if action == 'right':
-                            next_move[1] += 1
-                            if next_move[1] >= self.col:
-                                break
-                            elif self.map[tuple(next_move)] == 0:
-                                nr_possible_moves += 1
-                                moves.append([action, tuple(next_move)])
-                                break
+                        # Adds the movement of the current action
+                        next_move[0] += self.actions[action]['row']
+                        next_move[1] += self.actions[action]['column']
 
-                        # Left: checks for possible move
-                        if action == 'left':
-                            next_move[1] -= 1
-                            if next_move[1] < 0:
-                                break
-                            elif self.map[tuple(next_move)] == 0:
-                                nr_possible_moves += 1
-                                moves.append([action, tuple(next_move)])
-                                break
+                        # Checkes that we are not out-of-bounds
+                        if next_move[0] < 0:
+                            break
+                        elif next_move[1] < 0:
+                            break
+                        elif next_move[0] >= enviroment.row:
+                            break
+                        elif next_move[1] >= enviroment.column:
+                            break
+                        
+                        # Checks that next state is a valid state
+                        elif enviroment.binary_map[tuple(next_move)] == 0:
+                            nr_possible_moves += 1
+                            moves.append([action, tuple(next_move)])
+                            break
 
-                        # Up: checks for possible move
-                        if action == 'down':
-                            next_move[0] += 1
-                            if next_move[0] >= self.row:
-                                break
-                            elif self.map[tuple(next_move)] == 0:
-                                nr_possible_moves += 1
-                                moves.append([action, tuple(next_move)])
-                                break
+                        # Breaks if not wall hack is enabled        
+                        if not wall_hack:
+                            break
 
-                        # Down: checks for possible move
-                        if action == 'up':
-                            next_move[0] -= 1
-                            if next_move[0] < 0:
-                                break
-                            elif self.map[tuple(next_move)] == 0:
-                                nr_possible_moves += 1
-                                moves.append([action, tuple(next_move)])
-                                break
                 if verbose:
                     print("moves: {} \nNr of possible moves: {}".format(moves, nr_possible_moves))
-                for move in moves: 
-                    current_state = r*self.col + c
-                    move_to_state = move[1][0]*self.col + move[1][1]
-                    # print("Action: {},\t Move: {},\t state: {}".format(move[0], move[1], move_to_state))
-                    self.minotaur.transition_matrix[move[0]][current_state, move_to_state] += 1/nr_possible_moves
-        # print(self.minotaur.transition_matrix['left'])
-            
+
+                for move in moves: # Calculates current state, next state and action.
+                    state = r*enviroment.column + c
+                    next_state = move[1][0]*enviroment.column + move[1][1]
+                    action = move[0]
+                    # print("Action: {},\t Move: {},\t state: {}".format(action, state, next_state))
+
+                    if self.transition_matrix[action]['valid?']:
+                        if wall_hack: # wall_hack implies that we have uniformly probability (Minotaur)
+                            self.transition_matrix[action]['probability'][state, next_state] += 1/nr_possible_moves
+                        else: # Always probability 1 for transition 
+                            self.transition_matrix[action]['probability'][state, next_state] += 1
+
+        # print(self.transition_matrix['right']['probability'])
 
 
-
-
-
+class Enviroment():
+    def __init__(self, binary_map, start=(0,0), goal=(7,6), T=20):
+        #Index declaration:  0:= "valid space", 1:= "wall"
+        self.binary_map =  binary_map
+        self.nr_states = self.binary_map.size
+        self.row, self.column = self.binary_map.shape
+        self.start = start
+        self.goal = goal
+        self.T = T
 
     def reward_function(self):
         if self.human.pose == self.minotaur.pose:
@@ -211,8 +117,49 @@ class Enviroment():
 
 
 def main():
-    game = Enviroment()
-    game.transition_probability()
+
+    # Generates the game enviroment, i.e. the maze etc. 
+    binary_map =np.matrix( [[0, 0, 1, 0, 0, 0, 0, 0],
+                            [0, 0, 1, 0, 0, 1, 0, 0],
+                            [0, 0, 1, 0, 0, 1, 1, 1],
+                            [0, 0, 1, 0, 0, 1, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 1, 1, 1, 1, 1, 1, 0],
+                            [0, 0, 0, 0, 1, 0, 0, 0]])
+
+    game = Enviroment(binary_map=binary_map)
+
+    # Generates the human player
+    human = Player(pose=game.start, nr_states=binary_map.size)
+    human.generate_transition_probability(enviroment=game)
+
+    # Generates the minotaur player
+    minotaur = Player(pose=game.goal, nr_states=binary_map.size, can_stay=False)
+    minotaur.generate_transition_probability(enviroment=game, wall_hack=True, verbose=True)
+
+
+    # Saves the files to the result folder. 
+    with open("Lab_1/results/player_trans/left.txt",'w') as f:
+        np.savetxt(f, human.transition_matrix["left"]["probability"], fmt='%d')
+    with open("Lab_1/results/player_trans/right.txt",'w') as f:
+        np.savetxt(f, human.transition_matrix["right"]["probability"], fmt='%d')
+    with open("Lab_1/results/player_trans/up.txt",'w') as f:
+        np.savetxt(f, human.transition_matrix["up"]["probability"], fmt='%d')
+    with open("Lab_1/results/player_trans/down.txt",'w') as f:
+        np.savetxt(f, human.transition_matrix["down"]["probability"], fmt='%d')
+    with open("Lab_1/results/player_trans/stay.txt",'w') as f:
+        np.savetxt(f, human.transition_matrix["stay"]["probability"], fmt='%d')
+    
+    with open("Lab_1/results/minotaur_trans/left.txt",'w') as f:
+        np.savetxt(f, minotaur.transition_matrix["left"]["probability"]*100, fmt='%d')
+    with open("Lab_1/results/minotaur_trans/right.txt",'w') as f:
+        np.savetxt(f, minotaur.transition_matrix["right"]["probability"]*100, fmt='%d')
+    with open("Lab_1/results/minotaur_trans/up.txt",'w') as f:
+        np.savetxt(f, minotaur.transition_matrix["up"]["probability"]*100, fmt='%d')
+    with open("Lab_1/results/minotaur_trans/down.txt",'w') as f:
+        np.savetxt(f, minotaur.transition_matrix["down"]["probability"]*100, fmt='%d')
+    with open("Lab_1/results/minotaur_trans/stay.txt",'w') as f:
+        np.savetxt(f, minotaur.transition_matrix["stay"]["probability"]*100, fmt='%d')
 
 
 
