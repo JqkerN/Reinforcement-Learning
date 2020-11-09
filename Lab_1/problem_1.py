@@ -1,5 +1,5 @@
 """
-    KTH: EL 2805 Reinforcement Learning 
+    KTH: EL2805 Reinforcement Learning 
                November 2020
                 Problem 1
 
@@ -67,14 +67,13 @@ class Player():
                             break
                         elif next_move[1] >= enviroment.column:
                             break
-                        
                         # Checks that next state is a valid state
                         elif enviroment.binary_map[tuple(next_move)] == 0:
                             nr_possible_moves += 1
                             moves.append([action, tuple(next_move)])
                             break
 
-                        # Breaks if not wall hack is enabled        
+                        # Breaks if not wall_hack is enabled        
                         if not wall_hack:
                             break
 
@@ -90,7 +89,7 @@ class Player():
                     if self.transition_matrix[action]['valid?']:
                         if wall_hack: # wall_hack implies that we have uniformly probability (Minotaur)
                             self.transition_matrix[action]['probability'][state, next_state] += 1/nr_possible_moves
-                        else: # Always probability 1 for transition 
+                        else: # Always probability 1 for transition (Human)
                             self.transition_matrix[action]['probability'][state, next_state] += 1
 
         # print(self.transition_matrix['right']['probability'])
@@ -98,7 +97,6 @@ class Player():
 
 class Enviroment():
     def __init__(self, binary_map, start=(0,0), goal=(7,6), T=20):
-        #Index declaration:  0:= "valid space", 1:= "wall"
         self.binary_map =  binary_map
         self.nr_states = self.binary_map.size
         self.row, self.column = self.binary_map.shape
@@ -119,8 +117,8 @@ class Enviroment():
 
 
 def main():
-
-    # Generates the game enviroment, i.e. the maze etc. 
+    # Defines the game map which is a binary map, 
+    # Index declaration:  0:= "valid space", 1:= "wall"
     binary_map =np.matrix( [[0, 0, 1, 0, 0, 0, 0, 0],
                             [0, 0, 1, 0, 0, 1, 0, 0],
                             [0, 0, 1, 0, 0, 1, 1, 1],
@@ -129,6 +127,7 @@ def main():
                             [0, 1, 1, 1, 1, 1, 1, 0],
                             [0, 0, 0, 0, 1, 0, 0, 0]])
 
+    # Generates the game enviroment, i.e. the maze and necessary variables. 
     game = Enviroment(binary_map=binary_map)
 
     # Generates the human player
