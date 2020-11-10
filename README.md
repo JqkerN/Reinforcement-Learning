@@ -3,10 +3,6 @@ Reinforcement Learning - EL2805
 
 
 ## LABs
-- [ ] Lab 0
-    - [ ] Problem 1
-    - [ ] Problem 2
-    - [ ] Problem 3
 - [ ] Lab 1
     - [ ] Problem 1: The Maze and the Random Minotaur (mandatory)
     - [ ] Problem 2: Robbin Banks (mandatory)
