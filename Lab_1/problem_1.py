@@ -9,12 +9,11 @@ Daniel Hirsch       960202-5737  dhirsch@kth.se
 """
 import numpy as np
 import sys
-# np.set_printoptions(threshold=sys.maxsize) # Allows the whole matriz to be printed.
+# np.set_printoptions(threshold=sys.maxsize) # Allows the whole matrix to be printed.
 
 class Player():
     def __init__(self, pose, nr_states, can_stay=True):
         self.pose = pose
-        empty_matrix = np.zeros((nr_states, nr_states))
 
         #             Action     Valid Action [bool]        Row Impact [%d]    Column Impact [%d]
         self.actions={'left' :   {'valid?': True,           'row':  0,         'column': -1},
@@ -23,12 +22,12 @@ class Player():
                       'down' :   {'valid?': True,           'row':  1,         'column':  0},
                       'stay' :   {'valid?': can_stay,       'row':  0,         'column':  0}}
 
-        #                         Action        Valid Action [bool]     probability matrix [2x2: %f]
-        self.transition_matrix = {'left' :      {'valid?': True,       'probability': empty_matrix},
-                                  'right':      {'valid?': True,       'probability': empty_matrix},
-                                  'up'   :      {'valid?': True,       'probability': empty_matrix},
-                                  'down' :      {'valid?': True,       'probability': empty_matrix},
-                                  'stay' :      {'valid?': can_stay,   'probability': empty_matrix}}
+        #                         Action        Valid Action [bool]     probability matrix [NxM: %f]
+        self.transition_matrix = {'left' :      {'valid?': True,       'probability': np.zeros((nr_states, nr_states))},
+                                  'right':      {'valid?': True,       'probability': np.zeros((nr_states, nr_states))},
+                                  'up'   :      {'valid?': True,       'probability': np.zeros((nr_states, nr_states))},
+                                  'down' :      {'valid?': True,       'probability': np.zeros((nr_states, nr_states))},
+                                  'stay' :      {'valid?': can_stay,   'probability': np.zeros((nr_states, nr_states))}}
     
 
     def generate_transition_probability(self, enviroment, wall_hack=False, verbose=False):
@@ -49,7 +48,7 @@ class Player():
                     if self.actions[action]['valid?'] == False:
                         continue
 
-                    # Wall: Not a valid state
+                    # Wall: Not a valid current state
                     if enviroment.binary_map[tuple(next_move)] != 0: 
                             continue
 
