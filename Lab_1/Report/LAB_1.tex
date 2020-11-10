@@ -1,0 +1,51 @@
+ \documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage[labelsep=period]{caption} % Figur. istället för Figur:
+\usepackage{relsize}
+\usepackage{multirow}
+\usepackage[export]{adjustbox}
+\usepackage{subcaption}
+\usepackage{wrapfig}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{geometry}
+\usepackage{parskip}
+
+\title{Reinforcement Learning EL2805\\
+       Laboration 1}
+
+\author{Ilian Corenliussen, 950418-2438, ilianc@kth.se\\ 
+        Daniel Hirsch, 960202-5737, dhirsch@kth.se}
+\date{November 2020}
+
+\begin{document}
+
+\maketitle
+
+\section*{Problem 1: \\
+        The Maze and the Random Minotaur}
+\subsection*{(a)}
+The problem can me modelled as an MDP such that, the number of states is depending on the grid space and the human and Minotaur position, e.g. \textbf{State space:} $S = \{(H_x, H_y, M_x, M_y) \} $, where $H_x$ and $H_y$ is the human and $M_x$ and $M_y$ the Minotaur position x and y position within the grid, excluding the x and y-positions of the walls. The walls and out-of-bounds will be notated as $\neg S$.
+
+\textbf{Actions}: The actions can be as described in the lab instructions as left, right, up, down or stay at the current position, $A = \{ A_{left}, A_{right}, A_{up}, A_{down}, A_{stay} \}$. 
+
+
+% The rewards will be based on the Manhattan distance between the human and the goal of valid states and have a large negative reward if the Minotaur is closer than two in Manhattan distance, e.g.
+% $$
+% r(s' \in S|s,a) = -|H_x - B_x| - |H_y - B_y| + 
+% \begin{cases}
+%     -10 & if \; |H_x - M_x| + |H_y - M_y|  \leq 2\\
+%     0, & \text{otherwise}.
+% \end{cases}
+% $$
+
+% \textbf{State space:} $S = \{\Theta \cup (H_x, H_y, M_x, M_y) \} $, where $H_x$ and $H_y$ is the human and $M_x$ and $M_y$ the Minotaur position x and y position within the grid, excluding the x and y-positions of the walls.\\
+% \textbf{Actions}: $A = \{ A_{left}, A_{right}, A_{up}, A_{down}, A_{stay} \}$\\
+\textbf{Rewards:} $r(H_x = M_x , H_y = M_y |s,a) = -1 $, $r(H_x = B_x , H_y = B_y |s,a) = 1 $, $r(s\in \neg S |s,a) = -\infty $ where $\neg S$ is a wall or out-of-boundary.
+
+\textbf{Transition Probabilities}: $P_t(s \in S |s,a) = 1$, $P_t(s \in \neg S |s,a) = 0$  
+
+\end{document}
