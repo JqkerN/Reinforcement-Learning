@@ -40,7 +40,7 @@ class Player():
                 if verbose:
                     print("\n______________________")
                     print("r: {}, c: {}".format(r,c))
-                    
+
                 for action in self.actions: # Iterate through all of the possible actions
                     next_move = [r,c]   # Creates the next move
 
@@ -49,32 +49,33 @@ class Player():
                         continue
 
                     # Wall: Not a valid current state
-                    if enviroment.binary_map[tuple(next_move)] != 0: 
+                    if enviroment.binary_map[tuple(next_move)] != 0 and wall_hack==False: 
                             continue
 
-                    while True:
-                        # Adds the movement of the current action
-                        next_move[0] += self.actions[action]['row']
-                        next_move[1] += self.actions[action]['column']
 
-                        # Checkes that we are not out-of-bounds
-                        if next_move[0] < 0:
-                            break
-                        elif next_move[1] < 0:
-                            break
-                        elif next_move[0] >= enviroment.row:
-                            break
-                        elif next_move[1] >= enviroment.column:
-                            break
-                        # Checks that next state is a valid state
-                        elif enviroment.binary_map[tuple(next_move)] == 0:
-                            nr_possible_moves += 1
-                            moves.append([action, tuple(next_move)])
-                            break
+                    # Adds the movement of the current action
+                    next_move[0] += self.actions[action]['row']
+                    next_move[1] += self.actions[action]['column']
 
-                        # Breaks if not wall_hack is enabled        
-                        if not wall_hack:
-                            break
+                    # Checkes that we are not out-of-bounds
+                    if next_move[0] < 0:
+                        continue
+                    elif next_move[1] < 0:
+                        continue
+                    elif next_move[0] >= enviroment.row:
+                        continue
+                    elif next_move[1] >= enviroment.column:
+                        continue
+                    # If wall_hack we can stay in the walls.
+                    elif wall_hack:
+                        nr_possible_moves += 1
+                        moves.append([action, tuple(next_move)])
+                        continue
+                    # Checks that next state is a valid state
+                    elif enviroment.binary_map[tuple(next_move)] == 0:
+                        nr_possible_moves += 1
+                        moves.append([action, tuple(next_move)])
+                        continue
 
                 if verbose:
                     print("moves: {} \nNr of possible moves: {}".format(moves, nr_possible_moves))
@@ -84,11 +85,10 @@ class Player():
                     next_state = move[1][0]*enviroment.column + move[1][1]
                     action = move[0]
 
-                    if self.transition_matrix[action]['valid?']:
-                        if wall_hack: # wall_hack implies that we have uniformly probability (Minotaur)
-                            self.transition_matrix[action]['probability'][state, next_state] += 1/nr_possible_moves
-                        else: # Always probability 1 for transition (Human)
-                            self.transition_matrix[action]['probability'][state, next_state] += 1
+                    if wall_hack: # wall_hack implies that we have uniformly probability (Minotaur)
+                        self.transition_matrix[action]['probability'][state, next_state] += 1/nr_possible_moves
+                    else: # Always probability 1 for transition (Human)
+                        self.transition_matrix[action]['probability'][state, next_state] += 1
 
 
 
