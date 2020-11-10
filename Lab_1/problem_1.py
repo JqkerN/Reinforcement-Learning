@@ -22,14 +22,13 @@ class Player():
                       'down' :   {'valid?': True,           'row':  1,         'column':  0},
                       'stay' :   {'valid?': can_stay,       'row':  0,         'column':  0}}
 
-        #                         Action        Valid Action [bool]     probability matrix [NxM: %f]
+        #                         Action        Valid Action [bool]    probability matrix [NxM: %f]
         self.transition_matrix = {'left' :      {'valid?': True,       'probability': np.zeros((nr_states, nr_states))},
                                   'right':      {'valid?': True,       'probability': np.zeros((nr_states, nr_states))},
                                   'up'   :      {'valid?': True,       'probability': np.zeros((nr_states, nr_states))},
                                   'down' :      {'valid?': True,       'probability': np.zeros((nr_states, nr_states))},
                                   'stay' :      {'valid?': can_stay,   'probability': np.zeros((nr_states, nr_states))}}
     
-
     def generate_transition_probability(self, enviroment, wall_hack=False, verbose=False):
         """ Description: Creates the transition probability matrix
             for the human and the beast.
@@ -41,7 +40,8 @@ class Player():
                 if verbose:
                     print("\n______________________")
                     print("r: {}, c: {}".format(r,c))
-                for action in self.actions:    # Iterate through all of the possible actions
+                    
+                for action in self.actions: # Iterate through all of the possible actions
                     next_move = [r,c]   # Creates the next move
 
                     # Check that the action is a valid action
@@ -83,7 +83,6 @@ class Player():
                     state = r*enviroment.column + c
                     next_state = move[1][0]*enviroment.column + move[1][1]
                     action = move[0]
-                    # print("Action: {},\t Move: {},\t state: {}".format(action, state, next_state))
 
                     if self.transition_matrix[action]['valid?']:
                         if wall_hack: # wall_hack implies that we have uniformly probability (Minotaur)
@@ -91,7 +90,6 @@ class Player():
                         else: # Always probability 1 for transition (Human)
                             self.transition_matrix[action]['probability'][state, next_state] += 1
 
-        # print(self.transition_matrix['right']['probability'])
 
 
 class Enviroment():
