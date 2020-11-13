@@ -410,6 +410,7 @@ def draw_maze(maze):
         cell.set_height(1.0/rows)
         cell.set_width(1.0/cols)
     plt.show()
+    plt.close(fig)
 
 def animate_solution(maze, path, can_stay=False):
 
