@@ -161,15 +161,15 @@ Where  $n.v.s. =\text{"not a valid state"}$ for all of the over diagonal element
 
 For terminal state, we can only take the stop action and therefore gets:
 \begin{equation*}
-    V_T(1) = \frac{1}{T}\geq 0
+    V_{T}(1) = \frac{1}{T}\geq 0
 \end{equation*}
 \begin{equation*}
-    V_T(n) = \frac{n}{T}\geq 0
+    V_{T}(n) = \frac{n}{T}\geq 0
 \end{equation*}
 \begin{equation*}
-    V_T(n+1) = \frac{n}{T} + \frac{1}{T} \geq \frac{n}{T}
+    V_{T}(n+1) = \frac{n}{T} + \frac{1}{T} \geq \frac{n}{T}
 \end{equation*}
-and for non-terminal state $t\ne T$ we have to explore the two possible actions and gets:
+and for non-terminal state $t\ne T$ we assume that $t+1=T$ and we have to explore the two possible actions and gets:
 \begin{equation*}
     \max
     \left\{\begin{matrix}
