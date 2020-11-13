@@ -139,7 +139,7 @@ class Maze:
         for s in range(self.n_states):
             for a in range(self.n_actions):
                 n = 0
-                next_s_vec = []
+                next_s_vec = list()
                 for a_minotaur in self.actions_minotaur:
                     next_s = self.__move(s, a, a_minotaur)
                     if next_s != None:
@@ -160,7 +160,7 @@ class Maze:
                 for a in range(self.n_actions):
 
                     n = 0
-                    next_s_vec = []
+                    next_s_vec = list()
                     for a_minotaur in self.actions_minotaur:
                         next_s = self.__move(s, a, a_minotaur)
                         if next_s != None:
@@ -189,7 +189,7 @@ class Maze:
             for s in range(self.n_states):
                  for a in range(self.n_actions):
                     n = 0
-                    next_s_vec = []
+                    next_s_vec = list()
                     for a_minotaur in self.actions_minotaur:
                         next_s = self.__move(s, a, a_minotaur)
                         if next_s != None:
@@ -221,7 +221,7 @@ class Maze:
             path.append(start)
             while t < horizon-1:
                 # Move to next state given the policy and the current state
-                next_s_vec = []
+                next_s_vec = list()
                 for a_minotaur in self.actions_minotaur:
                     next_s = self.__move(s, policy[s,t], a_minotaur)
                     if next_s != None:
@@ -364,37 +364,36 @@ def value_iteration(env, gamma, epsilon):
         # Compute the new BV
         for s in range(n_states):
             for a in range(n_actions):
-                Q[s, a] = r[s, a] + gamma*np.dot(p[:,s,a],V);
+                Q[s, a] = r[s, a] + gamma*np.dot(p[:,s,a],V)
         BV = np.max(Q, 1)
         # Show error
         #print(np.linalg.norm(V - BV))
 
     # Compute policy
-    policy = np.argmax(Q,1);
+    policy = np.argmax(Q,1)
     # Return the obtained policy
-    return V, policy;
+    return V, policy
 
 def draw_maze(maze):
-
     # Map a color to each cell in the maze
-    col_map = {0: WHITE, 1: BLACK, 2: LIGHT_GREEN, -6: LIGHT_RED, -1: LIGHT_RED};
+    col_map = {0: WHITE, 1: BLACK, 2: LIGHT_GREEN, -6: LIGHT_RED, -1: LIGHT_RED}
 
     # Give a color to each cell
-    rows,cols    = maze.shape;
-    colored_maze = [[col_map[maze[j,i]] for i in range(cols)] for j in range(rows)];
+    rows,cols    = maze.shape
+    colored_maze = [[col_map[maze[j,i]] for i in range(cols)] for j in range(rows)]
 
     # Create figure of the size of the maze
-    fig = plt.figure(1, figsize=(cols,rows));
+    fig = plt.figure(1, figsize=(cols,rows))
 
     # Remove the axis ticks and add title title
-    ax = plt.gca();
-    ax.set_title('The Maze');
-    ax.set_xticks([]);
-    ax.set_yticks([]);
+    ax = plt.gca()
+    ax.set_title('The Maze')
+    ax.set_xticks([])
+    ax.set_yticks([])
 
     # Give a color to each cell
-    rows,cols    = maze.shape;
-    colored_maze = [[col_map[maze[j,i]] for i in range(cols)] for j in range(rows)];
+    rows,cols    = maze.shape
+    colored_maze = [[col_map[maze[j,i]] for i in range(cols)] for j in range(rows)]
 
     # Create figure of the size of the maze
     fig = plt.figure(1, figsize=(cols,rows))
@@ -404,12 +403,12 @@ def draw_maze(maze):
                             cellColours=colored_maze,
                             cellLoc='center',
                             loc=(0,0),
-                            edges='closed');
+                            edges='closed')
     # Modify the hight and width of the cells in the table
     tc = grid.properties()['children']
     for cell in tc:
-        cell.set_height(1.0/rows);
-        cell.set_width(1.0/cols);
+        cell.set_height(1.0/rows)
+        cell.set_width(1.0/cols)
     plt.show()
 
 def animate_solution(maze, path, can_stay=False):
@@ -448,53 +447,61 @@ def animate_solution(maze, path, can_stay=False):
         cell.set_height(1.0/rows)
         cell.set_width(1.0/cols)
 
-    stop = False
-    history = dict()
+    stop = False        # Condition for stoping the iteration is fulfilled or not.
+    history = dict()    # Keeping track of the old moves
+
     # Update the color at each frame
     for i in range(len(path)):
         if i > 0:
-            try:
-                history[path[i-1][0]] += '\nP_t='+str(i)
+            try: # If the key has already been made
+                history[path[i-1][0]] += '\nPlayer: '+str(i)
             except:
-                history[path[i-1][0]] = 'P_t='+str(i)
-            try:
-                history[path[i-1][1]] += '\nM_t='+str(i)
+                history[path[i-1][0]] = 'Player: '+str(i)
+            try: # If the key has already been made
+                history[path[i-1][1]] += '\nMinotaur: '+str(i)
             except:
-                history[path[i-1][1]] = 'M_t='+str(i)
+                history[path[i-1][1]] = 'Minotaur: '+str(i)
+
+            # Remove the old player position and add index.
             grid.get_celld()[path[i-1][0]].set_facecolor(col_map[maze[path[i-1][0]]])
             grid.get_celld()[path[i-1][0]].get_text().set_text(history[path[i-1][0]])
+            # Remove the old Minotaur postion and add index
             grid.get_celld()[path[i-1][1]].set_facecolor(col_map[maze[path[i-1][1]]])
             grid.get_celld()[path[i-1][1]].get_text().set_text(history[path[i-1][1]])
+        
+        # Update player position
         grid.get_celld()[path[i][0]].set_facecolor(LIGHT_ORANGE)
         grid.get_celld()[path[i][0]].get_text().set_text('Player')
-
+        # Update Minotaur postion
         grid.get_celld()[path[i][1]].set_facecolor(LIGHT_RED)
         grid.get_celld()[path[i][1]].get_text().set_text('Minotaur')
 
         if i > 0:
+            # Update cell if player has been eaten
             if path[i][0] == path[i][1]:
                 grid.get_celld()[path[i][0]].set_facecolor(BLACK)
                 grid.get_celld()[path[i][0]].get_text().set_text('OOO-NO I have been eaten!')
                 print("OOO-NO I have been eaten!")
                 stop = True
                 
-                
+            # Update cell if player reaches goal
             elif path[i][0] == path[i-1][0] and maze[path[i][0]] == 2:
                 grid.get_celld()[path[i][0]].set_facecolor(LIGHT_GREEN)
-                grid.get_celld()[path[i][0]].get_text().set_text('Player is out')
+                grid.get_celld()[path[i][0]].get_text().set_text(history[path[i][0]] + '\nPlayer is out: ' + str(i))
                 print("Congratulations! You reached the goal at t={}".format(i))
                 stop = True
                           
 
-        display.display(fig)
+        # display.display(fig)
+        # display.clear_output(wait=True)
         plt.draw()
-        display.clear_output(wait=True)
-        plt.pause(1)
+        plt.pause(0.1)
         if stop:
-            break    
-
+            break      
+    plt.waitforbuttonpress(0)
     timestamp = datetime.now()
     file_path = os.path.join(os.path.realpath(os.path.dirname(__file__)), '..') 
     filename = file_path + "\images\problem_1\MazeRun_" + timestamp.strftime("%b-%d-%Y_%H-%M-%S")
     plt.savefig(fname=filename)
+    plt.close(fig)
 
