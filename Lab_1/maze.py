@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 from IPython import display
-
+import math
 
 # Implemented methods
 methods = ['DynProg', 'ValIter']
@@ -36,7 +36,7 @@ class Maze:
     # Reward values
     STEP_REWARD = -1
     GOAL_REWARD = 0
-    IMPOSSIBLE_REWARD = -100
+    IMPOSSIBLE_REWARD = -math.inf
     EATEN_REWARD = -100
 
 

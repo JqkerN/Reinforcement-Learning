@@ -35,5 +35,5 @@ method = 'DynProg'
 start  = ((0,0),(6,5))
 
 path = env.simulate(start, policy, method)
-print(path)
+
 mz.animate_solution(maze, path)
