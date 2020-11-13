@@ -49,7 +49,7 @@ The probability to go from one state to a more worn state when continuing is mod
 		        \end{bmatrix}
 \]
 \subsection*{b)}
-\textbf{Bellman equation:} $u_{t}^{\star}\left(s_{t}\right)=\max _{a \in A_{s_{t}}}\left[r_{t}\left(s_{t}, a\right)+\sum_{j \in S} p_{t}\left(j \mid s_{t}, a\right) u_{t+1}^{\star}\left(j\right)\right]$
+\textbf{Bellman equation:} $u_{t}^{*}\left(s_{t}\right)=\max _{a \in A_{s_{t}}}\left[r_{t}\left(s_{t}, a\right)+\sum_{j \in S} p_{t}\left(j \mid s_{t}, a\right) u_{t+1}^{*}\left(j\right)\right]$
 
 \subsubsection*{Solution:}
 \begin{equation}
@@ -88,8 +88,8 @@ u_{2}^{*}(S_i \in S)  = 0
 \begin{equation}
     u_{0}^{*}(S_P) = \max
     \left\{\begin{matrix}
-    A_C: & 0 + \Theta u_{1}^{*}(W) + (1 - \Theta)u_{1}^{*}(P) = -1.5 \\
-    A_R: & -R + u_{1}^{*}(P) = -8
+    A_C: & 0 + \Theta u_{1}^{*}(S_W) + (1 - \Theta)u_{1}^{*}(S_P) = -1.5 \\
+    A_R: & -R + u_{1}^{*}(S_P) = -8
     \end{matrix}\right\}
     = -1.5
 \end{equation}
@@ -97,8 +97,8 @@ u_{2}^{*}(S_i \in S)  = 0
 \begin{equation}
     u_{0}^{*}(S_W) = \max
     \left\{\begin{matrix}
-    A_C: & -\frac{c}{2} + \Theta u_{1}^{*}(B) + (1 - \Theta)u_{1}^{*}(W) = -7.5\\
-    A_R: & -R +  u_{1}^{*}(P) = -8
+    A_C: & -\frac{c}{2} + \Theta u_{1}^{*}(S_B) + (1 - \Theta)u_{1}^{*}(S_W) = -7.5\\
+    A_R: & -R +  u_{1}^{*}(S_P) = -8
     \end{matrix}\right\}
     = -7.5
 \end{equation}
@@ -106,8 +106,8 @@ u_{2}^{*}(S_i \in S)  = 0
 \begin{equation}
     u_{0}^{*}(S_B) = \max
     \left\{\begin{matrix}
-    A_C: & -c + u_{1}^{*}(B) = -12\\
-    A_R: & -R + u_{1}^{*}(P) = -8
+    A_C: & -c + u_{1}^{*}(S_B) = -12\\
+    A_R: & -R + u_{1}^{*}(S_P) = -8
     \end{matrix}\right\}
     = -8
 \end{equation}
@@ -125,7 +125,7 @@ $$a^*_0(Broken)=Replace$$
 \section{Optimal Stopping}
 \subsection*{a)}
 \subsubsection*{Motivation:}
-The number of possible states for the MDP are correlated to the number of tosses, where each toss can generate a new head, i.e. $S = \{\Theta ,(n, t) \; \text{for} \; n,t\in [0,T] \; \text{and} \; n\leq t\}$ Where $\Theta$ is an empty set(Null space). The probability to move to a state with a higher number of heads than current state will be equal to $0.5$ due to fair coin. Furthermore, the probability to move to a state with the same number of heads state will be equal to $0.5$ as well. The reward for stopping will be proportional to the number of head ($n$) divided by the number of tosses ($t$), i.e. calculate the final score as $r(S_i, A_S) = \frac{n}{t} \; \forall \; S_i \in S$. The reward for continue will be equal to zero, $r(S_i, A_C) = 0 \; \forall \; S_i \in S $ due to we will not receive any reward for continuing tossing the coin. The number of states will be equal to an under triangular matrix such as, 
+The number of possible states for the MDP are correlated to the number of tosses ($t$), where each toss can generate a new head ($n$), i.e. $S = \{\Theta ,(n, t) \; \text{for} \; n,t\in [0,T] \; \text{and} \; n\leq t\}$. Where $\Theta$ is an empty set (Null space). The probability to move to a state with a higher number of heads than current state will be equal to $0.5$ due to a fair coin. Furthermore, the probability to move to a new state with the same number of heads will be equal to $0.5$ as well. The reward for stopping will be proportional to the number of heads divided by the number of tosses, i.e. calculate the final score as $r(S_i, A_S) = \frac{n}{t} \; \forall \; S_i \in S$. The reward for continue will be equal to zero, $r(S_i, A_C) = 0 \; \forall \; S_i \in S $ due to we will not receive any reward for continuing tossing the coin. The number of states will be equal to an under triangular matrix such as, 
 
 \[
 S_{T\times T} = \begin{bmatrix} 
@@ -137,7 +137,7 @@ S_{T\times T} = \begin{bmatrix}
 Where  $n.v.s. =\text{"not a valid state"}$ for all of the over diagonal elements.
 
 \textbf{Summary}\\
-\textbf{States:} $S = \{\Theta ,(n, t) \; \text{for} \; n,t\in [0,T] \; \text{and} \; n\leq t\}$ Where $\Theta$ is an empty set(Null space).\\
+\textbf{States:} $S = \{\Theta ,(n, t) \; \text{for} \; n,t\in [0,T] \; \text{and} \; n\leq t\}$\\
 \textbf{Actions:} $A = \{A_C(continue), A_S(stop)\}$ \\
 \textbf{Rewards:}  $r(S_i, A_C) = 0$ and $r(S_i, A_S) = \frac{n}{t}$ $ \; \forall \; S_i \in S$  \\
 \textbf{Transition probability:} $p(t+1, n+1|t, n, A_C)=p(t+1, n|t, n, A_C)=0.5$
@@ -148,7 +148,7 @@ Where  $n.v.s. =\text{"not a valid state"}$ for all of the over diagonal element
 \begin{equation}
     u_{t}^{*}(t,n) = \max
     \left\{\begin{matrix}
-    A_C: &  0.5 \cdot\left( u_{t+1}^{\star}\left(t+1 ,n+1\right) + u_{t+1}^{\star}\left(t+1 ,n\right)\right)\\
+    A_C: &  0.5 \cdot\left( u_{t+1}^{*}\left(t+1 ,n+1\right) + u_{t+1}^{*}\left(t+1 ,n\right)\right)\\
     A_S: &  n/t
     \end{matrix}\right\}
 \end{equation}
@@ -157,24 +157,53 @@ Where  $n.v.s. =\text{"not a valid state"}$ for all of the over diagonal element
 \textit{Number of states:} will be equal to the number of elements in the under triangular matrix $S_{T\times T}$, i.e. $\frac{1}{2}T(T+1)$ number of states.
 
 \subsection*{b)}
-\subsubsection*{Motivation by induction:}
-Sine $V_t$ is monotonically increasing with $n$. $V_t(n+1) = \frac{n+1}{t} \geq V_t(n) = \frac{n}{t}$ $\forall n$ 
+\subsubsection*{Motivation:}
+
+For terminal state, we can only take the stop action and therefore gets:
+\begin{equation*}
+    V_T(1) = \frac{1}{T}\geq 0
+\end{equation*}
+\begin{equation*}
+    V_T(n) = \frac{n}{T}\geq 0
+\end{equation*}
+\begin{equation*}
+    V_T(n+1) = \frac{n}{T} + \frac{1}{T} \geq \frac{n}{T}
+\end{equation*}
+and for non-terminal state $t\ne T$ we have to explore the two possible actions and gets:
+\begin{equation*}
+    \max
+    \left\{\begin{matrix}
+    A_C: &  0.5 \cdot\left( V_{t+1}\left(t+1 ,n + 2\right) + V_{t+1}\left(t+1 ,n + 1\right)\right)\\
+    A_S: &  (n+1)/t
+    \end{matrix}\right\} \geq 
+    \max
+    \left\{\begin{matrix}
+    A_C: &  0.5 \cdot\left( V_{t+1}\left(t+1 ,n+1\right) + V_{t+1}\left(t+1 ,n\right)\right)\\
+    A_S: &  n/t
+    \end{matrix}\right\}
+\end{equation*}
+\begin{equation*}
+    \implies V_{t}(t,n+1) \geq  V_{t}(t,n) 
+\end{equation*}
+which holds for all $t,n$ sine $V_t(n)$ is monotonically increasing with regards to $n$.
 
 \subsubsection*{Answer:}
 A is the correct statement.
 
 \subsection*{c)}
 \subsubsection*{Motivation:}
-
-When we achieves $n\geq \frac{t}{2}$, we have got more heads than the expected value ($ n = \frac{t}{2}$ when t goes to infinity) and therefore this must be the optimal policy. 
-
-
-
+When we achieves $n\geq \frac{t}{2}$, we have got more or equal numbers of heads than for the expected value ($ n = \frac{t}{2}$ when t goes to infinity due to a fair coin) and therefore this must be the optimal policy. 
 
 \subsubsection*{Answer:}
 C is the optimal policy.
+
 \subsection*{d)}
 \subsubsection*{Motivation:}
+Off-policy works if the behaviour policy are allowed to explore and we should also explore all the possible actions, therefore (B) should be the used behaviour policy. 
+
+% Due to off-policy we should choice to explore all the possible actions and therefore (B) should be the used behaviour policy.
+
 \subsubsection*{Answer:}
+The algorithm works with the behavior policy (B). 
 
 \end{document}
