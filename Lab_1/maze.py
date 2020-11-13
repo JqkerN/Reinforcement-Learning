@@ -467,7 +467,7 @@ def animate_solution(maze, path):
                 print("OOO-NO I have been eaten!")
                 stop = True
                 
-            elif maze[path[i][0]] == 2:
+            elif path[i][0] == path[i-1][0] and maze[path[i][0]] == 2:
                 grid.get_celld()[path[i][0]].set_facecolor(LIGHT_GREEN)
                 grid.get_celld()[path[i][0]].get_text().set_text('Player is out')
                 print("Congratulations! You reached the goal at t={}".format(i))
