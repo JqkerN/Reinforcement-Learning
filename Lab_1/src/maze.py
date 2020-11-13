@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import time
 from IPython import display
 import math
+from datetime import datetime
+import os
 
 # Implemented methods
 methods = ['DynProg', 'ValIter']
@@ -410,7 +412,7 @@ def draw_maze(maze):
         cell.set_width(1.0/cols);
     plt.show()
 
-def animate_solution(maze, path):
+def animate_solution(maze, path, can_stay=False):
 
     # Map a color to each cell in the maze
     col_map = {0: WHITE, 1: BLACK, 2: LIGHT_GREEN, -6: LIGHT_RED, -1: LIGHT_RED}
@@ -423,7 +425,7 @@ def animate_solution(maze, path):
 
     # Remove the axis ticks and add title title
     ax = plt.gca()
-    ax.set_title('Policy simulation')
+    ax.set_title('Policy simulation, can_stay=' + str(can_stay))
     ax.set_xticks([])
     ax.set_yticks([])
 
@@ -447,13 +449,22 @@ def animate_solution(maze, path):
         cell.set_width(1.0/cols)
 
     stop = False
+    history = dict()
     # Update the color at each frame
     for i in range(len(path)):
         if i > 0:
+            try:
+                history[path[i-1][0]] += '\nP_t='+str(i)
+            except:
+                history[path[i-1][0]] = 'P_t='+str(i)
+            try:
+                history[path[i-1][1]] += '\nM_t='+str(i)
+            except:
+                history[path[i-1][1]] = 'M_t='+str(i)
             grid.get_celld()[path[i-1][0]].set_facecolor(col_map[maze[path[i-1][0]]])
-            grid.get_celld()[path[i-1][0]].get_text().set_text('')
+            grid.get_celld()[path[i-1][0]].get_text().set_text(history[path[i-1][0]])
             grid.get_celld()[path[i-1][1]].set_facecolor(col_map[maze[path[i-1][1]]])
-            grid.get_celld()[path[i-1][1]].get_text().set_text('')
+            grid.get_celld()[path[i-1][1]].get_text().set_text(history[path[i-1][1]])
         grid.get_celld()[path[i][0]].set_facecolor(LIGHT_ORANGE)
         grid.get_celld()[path[i][0]].get_text().set_text('Player')
 
@@ -467,14 +478,13 @@ def animate_solution(maze, path):
                 print("OOO-NO I have been eaten!")
                 stop = True
                 
+                
             elif path[i][0] == path[i-1][0] and maze[path[i][0]] == 2:
                 grid.get_celld()[path[i][0]].set_facecolor(LIGHT_GREEN)
                 grid.get_celld()[path[i][0]].get_text().set_text('Player is out')
                 print("Congratulations! You reached the goal at t={}".format(i))
                 stop = True
-                
-         
-                
+                          
 
         display.display(fig)
         plt.draw()
@@ -482,4 +492,9 @@ def animate_solution(maze, path):
         plt.pause(1)
         if stop:
             break    
+
+    timestamp = datetime.now()
+    file_path = os.path.join(os.path.realpath(os.path.dirname(__file__)), '..') 
+    filename = file_path + "\images\problem_1\MazeRun_" + timestamp.strftime("%b-%d-%Y_%H-%M-%S")
+    plt.savefig(fname=filename)
 

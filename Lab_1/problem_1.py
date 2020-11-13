@@ -1,5 +1,5 @@
 import numpy as np
-import maze as mz 
+import src.maze as mz 
 
 
 
@@ -21,8 +21,9 @@ maze = np.array([
 # mz.draw_maze(maze)
 
 
-# Create an environment maze
-env = mz.Maze(maze, can_stay=True)
+# Create an environment 
+can_stay = False
+env = mz.Maze(maze, can_stay=can_stay)
 # env.show()
 
 # Finite horizon
@@ -36,4 +37,4 @@ start  = ((0,0),(6,5))
 
 path = env.simulate(start, policy, method)
 
-mz.animate_solution(maze, path)
+mz.animate_solution(maze, path, can_stay=can_stay)
