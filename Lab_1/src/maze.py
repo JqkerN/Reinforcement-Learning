@@ -488,7 +488,7 @@ def animate_solution(maze, path, can_stay=False):
             # Update cell if player reaches goal
             elif path[i][0] == path[i-1][0] and maze[path[i][0]] == 2:
                 grid.get_celld()[path[i][0]].set_facecolor(LIGHT_GREEN)
-                grid.get_celld()[path[i][0]].get_text().set_text(history[path[i][0]] + '\nPlayer is out: ' + str(i))
+                grid.get_celld()[path[i][0]].get_text().set_text(history[path[i][0]] + '\nPlayer is out')
                 print("Congratulations! You reached the goal at t={}".format(i))
                 stop = True
                           
