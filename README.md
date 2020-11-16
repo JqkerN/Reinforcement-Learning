@@ -11,7 +11,7 @@ Reinforcement Learning - EL2805
 - [ ] Lab 2
 
 ## Homeworks
-- [ ] Homework 1
+- [X] Homework 1
     - [X] P1: Machine Replacement
-    - [ ] P2: Optimal Stopping
+    - [X] P2: Optimal Stopping
 - [ ] Homework 2
