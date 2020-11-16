@@ -448,7 +448,7 @@ def animate_solution(maze, path, can_stay=False):
         cell.set_height(1.0/rows)
         cell.set_width(1.0/cols)
 
-    stop = False        # Condition for stoping the iteration is fulfilled or not.
+    outcome = False        # Condition for stoping the iteration is fulfilled or not.
     history = dict()    # Keeping track of the old moves
 
     # Update the color at each frame
@@ -470,12 +470,20 @@ def animate_solution(maze, path, can_stay=False):
             grid.get_celld()[path[i-1][1]].set_facecolor(col_map[maze[path[i-1][1]]])
             grid.get_celld()[path[i-1][1]].get_text().set_text(history[path[i-1][1]])
         
-        # Update player position
-        grid.get_celld()[path[i][0]].set_facecolor(LIGHT_ORANGE)
-        grid.get_celld()[path[i][0]].get_text().set_text('Player')
-        # Update Minotaur postion
-        grid.get_celld()[path[i][1]].set_facecolor(LIGHT_RED)
-        grid.get_celld()[path[i][1]].get_text().set_text('Minotaur')
+        try:
+            # Update player position
+            grid.get_celld()[path[i][0]].set_facecolor(LIGHT_ORANGE)
+            grid.get_celld()[path[i][0]].get_text().set_text(history[path[i][0]] + '\nPlayer')
+            # Update Minotaur postion
+            grid.get_celld()[path[i][1]].set_facecolor(LIGHT_RED)
+            grid.get_celld()[path[i][1]].get_text().set_text(history[path[i][1]] + '\nMinotaur')
+        except:
+            # Update player position
+            grid.get_celld()[path[i][0]].set_facecolor(LIGHT_ORANGE)
+            grid.get_celld()[path[i][0]].get_text().set_text('Player')
+            # Update Minotaur postion
+            grid.get_celld()[path[i][1]].set_facecolor(LIGHT_RED)
+            grid.get_celld()[path[i][1]].get_text().set_text('Minotaur')
 
         if i > 0:
             # Update cell if player has been eaten
@@ -483,26 +491,29 @@ def animate_solution(maze, path, can_stay=False):
                 grid.get_celld()[path[i][0]].set_facecolor(BLACK)
                 grid.get_celld()[path[i][0]].get_text().set_text('OOO-NO I have been eaten!')
                 print("OOO-NO I have been eaten!")
-                stop = True
+                outcome = True
                 
             # Update cell if player reaches goal
             elif path[i][0] == path[i-1][0] and maze[path[i][0]] == 2:
                 grid.get_celld()[path[i][0]].set_facecolor(LIGHT_GREEN)
                 grid.get_celld()[path[i][0]].get_text().set_text(history[path[i][0]] + '\nPlayer is out')
                 print("Congratulations! You reached the goal at t={}".format(i))
-                stop = True
+                outcome = True
                           
 
         # display.display(fig)
         # display.clear_output(wait=True)
+        
         plt.draw()
-        plt.pause(0.1)
-        if stop:
+        plt.pause(0.5)
+        if outcome:
             break      
+    
     plt.waitforbuttonpress(0)
     timestamp = datetime.now()
     file_path = os.path.join(os.path.realpath(os.path.dirname(__file__)), '..') 
-    filename = file_path + "\images\problem_1\MazeRun_" + timestamp.strftime("%b-%d-%Y_%H-%M-%S")
+    filename = file_path + "/images/problem_1/MazeRun_" + timestamp.strftime("%b-%d-%Y_%H-%M-%S")
     plt.savefig(fname=filename)
     plt.close(fig)
+    return outcome
 
