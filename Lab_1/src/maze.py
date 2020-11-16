@@ -76,10 +76,10 @@ class Maze:
             for j in range(self.maze.shape[1]):
                 for k in range(self.maze.shape[0]):
                     for l in range(self.maze.shape[1]):
-                        if self.maze[i,j] != 1:
-                            states[s] = ((i,j),(k,l))
-                            map[((i,j),(k,l))] = s
-                            s += 1
+                        # if self.maze[i,j] != 1:
+                        states[s] = ((i,j),(k,l))
+                        map[((i,j),(k,l))] = s
+                        s += 1
         return states, map
 
     def __move(self, state, action, action_minotaur):

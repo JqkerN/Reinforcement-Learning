@@ -31,7 +31,7 @@ def main():
     ##################################
     ############## A #################
     ##################################
-    A = True
+    A = False
     if A:
         # mz.draw_maze(maze)
 
@@ -58,14 +58,14 @@ def main():
     ##################################
     ############## B #################
     ##################################
-    B = False
+    B = True
     if B:
         # Generate plot for maximal probability as a function of T
         can_stay = [False, True]
         colors = ['black', 'red']
         
         max_T = 25
-        nr_iterations = 10
+        nr_iterations = 20
         method = 'DynProg'
         start  = ((0,0),(6,5))  # ((Player_pose),(Minotaur_pose))
 
