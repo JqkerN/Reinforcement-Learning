@@ -471,19 +471,24 @@ def animate_solution(maze, path, can_stay=False):
             grid.get_celld()[path[i-1][1]].get_text().set_text(history[path[i-1][1]])
         
         try:
-            # Update player position
-            grid.get_celld()[path[i][0]].set_facecolor(LIGHT_ORANGE)
-            grid.get_celld()[path[i][0]].get_text().set_text(history[path[i][0]] + '\nPlayer')
             # Update Minotaur postion
             grid.get_celld()[path[i][1]].set_facecolor(LIGHT_RED)
             grid.get_celld()[path[i][1]].get_text().set_text(history[path[i][1]] + '\nMinotaur')
         except:
+
+            grid.get_celld()[path[i][1]].set_facecolor(LIGHT_RED)
+            grid.get_celld()[path[i][1]].get_text().set_text('Minotaur')
+
+        try:
+            # Update player position
+            grid.get_celld()[path[i][0]].set_facecolor(LIGHT_ORANGE)
+            grid.get_celld()[path[i][0]].get_text().set_text(history[path[i][0]] + '\nPlayer')
+
+        except:
             # Update player position
             grid.get_celld()[path[i][0]].set_facecolor(LIGHT_ORANGE)
             grid.get_celld()[path[i][0]].get_text().set_text('Player')
-            # Update Minotaur postion
-            grid.get_celld()[path[i][1]].set_facecolor(LIGHT_RED)
-            grid.get_celld()[path[i][1]].get_text().set_text('Minotaur')
+
 
         if i > 0:
             # Update cell if player has been eaten
