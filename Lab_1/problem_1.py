@@ -70,7 +70,7 @@ def main():
         start  = ((0,0),(6,5))  # ((Player_pose),(Minotaur_pose))
 
         for i in range(len(can_stay)):
-            env = mz.Maze(maze, can_stay=can_stay)
+            env = mz.Maze(maze, can_stay=can_stay[i])
             x_vec = list()
             y_vec = list()
             print(can_stay[i])
