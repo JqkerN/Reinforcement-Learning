@@ -31,7 +31,7 @@ def main():
     ##################################
     ############## A #################
     ##################################
-    A = False
+    A = True
     if A:
         # mz.draw_maze(maze)
 
@@ -65,7 +65,7 @@ def main():
         colors = ['black', 'red']
         
         max_T = 25
-        nr_iterations = 200
+        nr_iterations = 10000
         method = 'DynProg'
         start  = ((0,0),(6,5))  # ((Player_pose),(Minotaur_pose))
 
