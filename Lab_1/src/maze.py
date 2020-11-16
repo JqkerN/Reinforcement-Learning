@@ -205,7 +205,7 @@ class Maze:
 
         return rewards
 
-    def simulate(self, start, policy, method):
+    def simulate(self, start, policy, method, goal=(6,5)):
         if method not in methods:
             error = 'ERROR: the argument method must be in {}'.format(methods)
             raise NameError(error)
@@ -242,22 +242,36 @@ class Maze:
             s = self.map[start]
             # Add the starting position in the maze to the path
             path.append(start)
+
             # Move to next state given the policy and the current state
-            next_s = self.__move(s,policy[s])
+            next_s_vec = list()
+            for a_minotaur in self.actions_minotaur:
+                next_s = self.__move(s, policy[s], a_minotaur)
+                if next_s != None:
+                    next_s_vec.append(next_s)
+            next_s = np.random.choice(next_s_vec, 1)[0]
+
             # Add the position in the maze corresponding to the next state
             # to the path
-            path.append(self.states[next_s][0])
-            # Loop while state is not the goal state
-            while s != next_s:
+            path.append(self.states[next_s])
+
+            # Loop while state is not a terminal state
+            while (self.states[s][0]==self.states[next_s][0] and self.states[next_s][0]==goal) == False:
                 # Update state
                 s = next_s
                 # Move to next state given the policy and the current state
-                next_s = self.__move(s,policy[s])
+                next_s_vec = list()
+                for a_minotaur in self.actions_minotaur:
+                    next_s = self.__move(s, policy[s], a_minotaur)
+                    if next_s != None:
+                        next_s_vec.append(next_s)
+                next_s = np.random.choice(next_s_vec, 1)[0]
                 # Add the position in the maze corresponding to the next state
                 # to the path
-                path.append(self.states[next_s][0])
+                path.append(self.states[next_s])
                 # Update time and state for next iteration
                 t += 1
+        
         return path
 
 
@@ -412,7 +426,7 @@ def draw_maze(maze):
     plt.show()
     plt.close(fig)
 
-def animate_solution(maze, path, can_stay=False):
+def animate_solution(maze, path, method, can_stay=False):
 
     # Map a color to each cell in the maze
     col_map = {0: WHITE, 1: BLACK, 2: LIGHT_GREEN, -6: LIGHT_RED, -1: LIGHT_RED}
@@ -510,14 +524,14 @@ def animate_solution(maze, path, can_stay=False):
         # display.clear_output(wait=True)
         
         plt.draw()
-        plt.pause(0.5)
+        plt.pause(0.1)
         if outcome:
             break      
     
     plt.waitforbuttonpress(0)
     timestamp = datetime.now()
     file_path = os.path.join(os.path.realpath(os.path.dirname(__file__)), '..') 
-    filename = file_path + "/images/problem_1/MazeRun_" + timestamp.strftime("%b-%d-%Y_%H-%M-%S")
+    filename = file_path + "/images/problem_1/MazeRun_" + method + "_" + timestamp.strftime("%b-%d-%Y_%H-%M-%S")
     plt.savefig(fname=filename)
     plt.close(fig)
     return outcome
