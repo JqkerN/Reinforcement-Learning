@@ -28,7 +28,7 @@
 \section*{Problem 1: \\
         The Maze and the Random Minotaur}
 \subsection*{(a)}
-The problem can me modelled as an MDP such that, the number of states is depending on the grid space and the human and Minotaur position, e.g. \textbf{State space:} $S = \{(H_x, H_y, M_x, M_y) \} $, where $H_x$ and $H_y$ is the human and $M_x$ and $M_y$ the Minotaur position x and y position within the grid, excluding the x and y-positions of the walls. The walls and out-of-bounds will be notated as $\neg S$.
+The problem can me modelled as an MDP such that, the number of states is depending on the grid space and the human and Minotaur position, e.g. \textbf{State space:} $S = \{(H_x, H_y),(M_x, M_y) \} $, where $H_x$ and $H_y$ is the human and $M_x$ and $M_y$ the Minotaur position x and y position within the grid, excluding the x and y-positions of the walls. The walls and out-of-bounds will be notated as $\neg S$.
 
 \textbf{Actions}: The actions can be as described in the lab instructions as left, right, up, down or stay at the current position, $A = \{ A_{left}, A_{right}, A_{up}, A_{down}, A_{stay} \}$. 
 
