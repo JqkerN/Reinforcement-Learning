@@ -36,10 +36,11 @@ class City:
     }
 
     # Reward values
-    STEP_REWARD = -1
-    GOAL_REWARD = 0
+    CAUGHT_REWARD = -50
+    BANK_REWARD = 10
     IMPOSSIBLE_REWARD = -math.inf
-    EATEN_REWARD = -100
+    STEP_REWARD = -1
+    
 
 
     def __init__(self, city, can_stay=False, weights=None, random_rewards=False):
@@ -59,11 +60,11 @@ class City:
     def __actions(self, can_stay):
         actions = dict()
         if can_stay:
-            actions[self.STAY]       = (0, 0)
+            actions[self.STAY]   = (0, 0)
         actions[self.MOVE_LEFT]  = (0,-1)
         actions[self.MOVE_RIGHT] = (0, 1)
         actions[self.MOVE_UP]    = (-1,0)
-        actions[self.MOVE_DOWN]  = (1,0)
+        actions[self.MOVE_DOWN]  = (1, 0)
         return actions
 
 
@@ -88,65 +89,71 @@ class City:
 
             :return tuple next_cell: Position (x,y) on the city that agent transitions to.
         """
-        current_pos_player = self.states[state][0]
-        current_pos_batman = self.states[state][1]
+        current_pos_player, current_pos_batman = self.states[state]
 
-        # Compute the future position given current (state, action)
-        row_player = current_pos_player[0] + self.actions[action][0]
-        col_player = current_pos_player[1] + self.actions[action][1]
+        caught = False
+        if current_pos_player == current_pos_batman:
+            caught = True
+            not_a_valid_move = False
+            hitting_city_walls = False
+            row_player, col_player = (0,0)
+            row_batman, col_batman = (1,2)
+        else:   
+            # Compute the future position given current (state, action)
+            row_player = current_pos_player[0] + self.actions[action][0]
+            col_player = current_pos_player[1] + self.actions[action][1]
 
-        row_batman = current_pos_batman[0] + self.actions_batman[action_batman][0]
-        col_batman = current_pos_batman[1] + self.actions_batman[action_batman][1]
+            row_batman = current_pos_batman[0] + self.actions_batman[action_batman][0]
+            col_batman = current_pos_batman[1] + self.actions_batman[action_batman][1]
 
-        # Is the future position an impossible one (minotaur)?
-        not_a_valid_move = (row_batman < 0) or (row_batman >= self.city.shape[0]) or \
-                        (col_batman < 0) or (col_batman >= self.city.shape[1]) or \
-                        (self.city[row_batman, col_batman] == 1)
+            # Is the future position an impossible one (minotaur)?
+            not_a_valid_move =  (row_batman < 0) or (row_batman >= self.city.shape[0]) or \
+                                (col_batman < 0) or (col_batman >= self.city.shape[1]) 
 
-        if current_pos_player[0] == current_pos_batman[0] and current_pos_player[1] < current_pos_batman[1]:
-            if action_batman == 'right':
-                not_a_valid_move = True
+            if current_pos_player[0] == current_pos_batman[0] and current_pos_player[1] < current_pos_batman[1]:
+                if action_batman == self.MOVE_RIGHT:
+                    not_a_valid_move = True
 
-        elif current_pos_player[0] == current_pos_batman[0] and current_pos_player[1] > current_pos_batman[1]:
-            if action_batman == 'left':
-                not_a_valid_move = True
+            elif current_pos_player[0] == current_pos_batman[0] and current_pos_player[1] > current_pos_batman[1]:
+                if action_batman == self.MOVE_LEFT:
+                    not_a_valid_move = True
 
-        elif current_pos_player[0] < current_pos_batman[0] and current_pos_player[1] == current_pos_batman[1]:
-            if action_batman == 'down':
-                not_a_valid_move = True
+            elif current_pos_player[0] < current_pos_batman[0] and current_pos_player[1] == current_pos_batman[1]:
+                if action_batman == self.MOVE_DOWN:
+                    not_a_valid_move = True
 
-        elif current_pos_player[0] > current_pos_batman[0] and current_pos_player[1] == current_pos_batman[1]:
-            if action_batman == 'up':
-                not_a_valid_move = True
+            elif current_pos_player[0] > current_pos_batman[0] and current_pos_player[1] == current_pos_batman[1]:
+                if action_batman == self.MOVE_UP:
+                    not_a_valid_move = True
 
-        elif current_pos_player[0] < current_pos_batman[0] and current_pos_player[0] < current_pos_batman[0]:
-            if action_batman == 'right' or action_batman == 'down':
-                not_a_valid_move = True
+            elif current_pos_player[0] < current_pos_batman[0] and current_pos_player[1] < current_pos_batman[1]:
+                if action_batman == self.MOVE_RIGHT or action_batman == self.MOVE_DOWN:
+                    not_a_valid_move = True
 
-        elif current_pos_player[0] > current_pos_batman[0] and current_pos_player[0] > current_pos_batman[0]:
-            if action_batman == 'left' or action_batman == 'up':
-                not_a_valid_move = True
+            elif current_pos_player[0] > current_pos_batman[0] and current_pos_player[1] > current_pos_batman[1]:
+                if action_batman == self.MOVE_LEFT or action_batman == self.MOVE_UP:
+                    not_a_valid_move = True
 
-        elif current_pos_player[0] > current_pos_batman[0] and current_pos_player[0] < current_pos_batman[0]:
-            if action_batman == 'right' or action_batman == 'up':
-                not_a_valid_move = True
+            elif current_pos_player[0] > current_pos_batman[0] and current_pos_player[1] < current_pos_batman[1]:
+                if action_batman == self.MOVE_RIGHT or action_batman == self.MOVE_UP:
+                    not_a_valid_move = True
 
-        elif current_pos_player[0] < current_pos_batman[0] and current_pos_player[0] > current_pos_batman[0]:
-            if action_batman == 'left' or action_batman == 'down':
-                not_a_valid_move = True
+            elif current_pos_player[0] < current_pos_batman[0] and current_pos_player[1] > current_pos_batman[1]:
+                if action_batman == self.MOVE_LEFT or action_batman == self.MOVE_DOWN:
+                    not_a_valid_move = True
 
 
-        # Is the future position an impossible one (player)?
-        hitting_city_walls =  (row_player == -1) or (row_player == self.city.shape[0]) or \
-                              (col_player == -1) or (col_player == self.city.shape[1]) or \
-                              (self.city[row_player, col_player] == 1)
+            # Is the future position an impossible one (player)?
+            hitting_city_walls =  (row_player < 0) or (row_player >= self.city.shape[0]) or \
+                                (col_player < 0) or (col_player >= self.city.shape[1]) or \
+                                (self.city[row_player, col_player] == 1)
 
         if not_a_valid_move: 
-            return None
+            return None, caught
         elif hitting_city_walls:
-            return self.map[(current_pos_player, (row_batman, col_batman))]
+            return self.map[(current_pos_player, (row_batman, col_batman))], caught
         else:
-            return self.map[((row_player, col_player), (row_batman, col_batman))]
+            return self.map[((row_player, col_player), (row_batman, col_batman))], caught
     
 
     def __transitions(self):
@@ -165,10 +172,14 @@ class City:
                 n = 0
                 next_s_vec = list()
                 for a_batman in self.actions_batman:
-                    state_player, state_batman = self.states[s]
-                    next_s = self.__move(s, a, a_batman)
+                    next_s, caught = self.__move(s, a, a_batman)
                     
-                    if next_s != None:
+                    if caught:
+                        n = 1
+                        next_s_vec = [next_s]
+                        break
+
+                    elif next_s != None:
                         n += 1
                         next_s_vec.append(next_s)
                 
@@ -177,7 +188,7 @@ class City:
         return transition_probabilities
 
     def __rewards(self, weights=None, random_rewards=None):
-
+        
         rewards = np.zeros((self.n_states, self.n_actions))
 
         # If the rewards are not described by a weight matrix
@@ -188,24 +199,33 @@ class City:
                     n = 0
                     next_s_vec = list()
                     for a_batman in self.actions_batman:
-                        next_s = self.__move(s, a, a_batman)
-                        if next_s != None:
-                            next_s_vec.append(next_s)
+                        next_s, caught = self.__move(s, a, a_batman)
+                        
+                        if caught and next_s != None:
+                            n = 1
+                            next_s_vec = [next_s]
+                            break
+
+                        elif next_s != None:
                             n += 1
+                            next_s_vec.append(next_s)
                     
                     for next_s in next_s_vec:
-                        # Reward for being eaten
-                        if self.states[next_s][0] == self.states[next_s][1]:
-                            rewards[s,a] += self.EATEN_REWARD
+                        
+                        if caught:
+                            pass
+                        # Reward for getting caught
+                        elif self.states[next_s][0] == self.states[next_s][1]:
+                            rewards[s,a] += self.CAUGHT_REWARD
                         # Reward for hitting a wall
                         elif self.states[s][0] == self.states[next_s][0] and a != self.STAY:
                             rewards[s,a] += self.IMPOSSIBLE_REWARD
-                        # Reward for reaching the exit
-                        elif self.states[s][0] == self.states[next_s][0] and self.city[self.states[next_s][0]] == 2:
-                            rewards[s,a] += self.GOAL_REWARD
-                        # Reward for taking a step to an empty cell that is not the exit
-                        else:
-                            rewards[s,a] += self.STEP_REWARD
+                        # Reward for robbing a bank
+                        elif self.city[self.states[s][0]] == 2 and self.city[self.states[next_s][0]] == 2:
+                            rewards[s,a] += self.BANK_REWARD
+                        # # # Reward for taking a step to an empty cell that is not the exit
+                        # else:
+                        #     rewards[s,a] += self.STEP_REWARD
 
                     rewards[s,a] /= n
                         
@@ -217,10 +237,16 @@ class City:
                     n = 0
                     next_s_vec = list()
                     for a_batman in self.actions_batman:
-                        next_s = self.__move(s, a, a_batman)
-                        if next_s != None:
-                            next_s_vec.append(next_s)
+                        next_s, caught = self.__move(s, a, a_batman)
+                        
+                        if caught:
+                            n = 1
+                            next_s_vec = [next_s]
+                            break
+
+                        elif next_s != None:
                             n += 1
+                            next_s_vec.append(next_s)
                     
                     for next_s in next_s_vec:
                         i,j = self.states[next_s][0]
@@ -231,7 +257,7 @@ class City:
 
         return rewards
 
-    def simulate(self, start, policy, method, goal=(6,5)):
+    def simulate(self, start, policy, method, iterations):
         if method not in methods:
             error = 'ERROR: the argument method must be in {}'.format(methods)
             raise NameError(error)
@@ -249,9 +275,15 @@ class City:
                 # Move to next state given the policy and the current state
                 next_s_vec = list()
                 for a_batman in self.actions_batman:
-                    next_s = self.__move(s, policy[s,t], a_batman)
-                    if next_s != None:
-                        next_s_vec.append(next_s)
+                        next_s, caught = self.__move(s, policy[s,t], a_batman)
+                        
+                        if caught:
+                            next_s_vec = [next_s]
+                            break
+
+                        elif next_s != None:
+                            next_s_vec.append(next_s)
+
                 next_s = np.random.choice(next_s_vec, 1)[0]
                 
                 # Add the position in the city corresponding to the next state
@@ -272,8 +304,13 @@ class City:
             # Move to next state given the policy and the current state
             next_s_vec = list()
             for a_batman in self.actions_batman:
-                next_s = self.__move(s, policy[s], a_batman)
-                if next_s != None:
+                next_s, caught = self.__move(s, policy[s], a_batman)
+                
+                if caught:
+                    next_s_vec = [next_s]
+                    break
+
+                elif next_s != None:
                     next_s_vec.append(next_s)
             next_s = np.random.choice(next_s_vec, 1)[0]
 
@@ -282,21 +319,27 @@ class City:
             path.append(self.states[next_s])
 
             # Loop while state is not a terminal state
-            while (self.states[s][0]==self.states[next_s][0] and self.states[next_s][0]==goal) == False:
+            while t <= iterations:
                 # Update state
                 s = next_s
                 # Move to next state given the policy and the current state
                 next_s_vec = list()
                 for a_batman in self.actions_batman:
-                    next_s = self.__move(s, policy[s], a_batman)
-                    if next_s != None:
-                        next_s_vec.append(next_s)
+                        next_s, caught = self.__move(s, policy[s], a_batman)
+                        
+                        if caught:
+                            next_s_vec = [next_s]
+                            break
+
+                        elif next_s != None:
+                            next_s_vec.append(next_s)
                 next_s = np.random.choice(next_s_vec, 1)[0]
                 # Add the position in the city corresponding to the next state
                 # to the path
                 path.append(self.states[next_s])
                 # Update time and state for next iteration
                 t += 1
+                
         
         return path
 
@@ -386,6 +429,7 @@ def value_iteration(env, gamma, epsilon):
     BV  = np.zeros(n_states)
     # Iteration counter
     n   = 0
+
     # Tolerance error
     tol = (1 - gamma)* epsilon/gamma
 
@@ -452,7 +496,7 @@ def draw_city(city):
     plt.show()
     plt.close(fig)
 
-def animate_solution(city, path, method, can_stay=False):
+def animate_solution(city, path, method, can_stay=False, pause_time=0.5, save=False):
 
     # Map a color to each cell in the city
     col_map = {0: WHITE, 1: BLACK, 2: LIGHT_GREEN, -6: LIGHT_RED, -1: LIGHT_RED}
@@ -494,71 +538,52 @@ def animate_solution(city, path, method, can_stay=False):
     # Update the color at each frame
     for i in range(len(path)):
         if i > 0:
-            try: # If the key has already been made
-                history[path[i-1][0]] += '\nPlayer: '+str(i)
-            except:
-                history[path[i-1][0]] = 'Player: '+str(i)
-            try: # If the key has already been made
-                history[path[i-1][1]] += '\nMinotaur: '+str(i)
-            except:
-                history[path[i-1][1]] = 'Minotaur: '+str(i)
-
             # Remove the old player position and add index.
             grid.get_celld()[path[i-1][0]].set_facecolor(col_map[city[path[i-1][0]]])
-            grid.get_celld()[path[i-1][0]].get_text().set_text(history[path[i-1][0]])
+            grid.get_celld()[path[i-1][0]].get_text().set_text('')
             # Remove the old Minotaur postion and add index
             grid.get_celld()[path[i-1][1]].set_facecolor(col_map[city[path[i-1][1]]])
-            grid.get_celld()[path[i-1][1]].get_text().set_text(history[path[i-1][1]])
+            grid.get_celld()[path[i-1][1]].get_text().set_text('')
         
-        try:
-            # Update Minotaur postion
-            grid.get_celld()[path[i][1]].set_facecolor(LIGHT_RED)
-            grid.get_celld()[path[i][1]].get_text().set_text(history[path[i][1]] + '\nMinotaur')
-        except:
+ 
+        grid.get_celld()[path[i][1]].set_facecolor(LIGHT_RED)
+        grid.get_celld()[path[i][1]].get_text().set_text('Batman')
 
-            grid.get_celld()[path[i][1]].set_facecolor(LIGHT_RED)
-            grid.get_celld()[path[i][1]].get_text().set_text('Minotaur')
-
-        try:
-            # Update player position
-            grid.get_celld()[path[i][0]].set_facecolor(LIGHT_ORANGE)
-            grid.get_celld()[path[i][0]].get_text().set_text(history[path[i][0]] + '\nPlayer')
-
-        except:
-            # Update player position
-            grid.get_celld()[path[i][0]].set_facecolor(LIGHT_ORANGE)
-            grid.get_celld()[path[i][0]].get_text().set_text('Player')
+        grid.get_celld()[path[i][0]].set_facecolor(LIGHT_ORANGE)
+        grid.get_celld()[path[i][0]].get_text().set_text('Joker')
 
 
         if i > 0:
             # Update cell if player has been eaten
             if path[i][0] == path[i][1]:
                 grid.get_celld()[path[i][0]].set_facecolor(BLACK)
-                grid.get_celld()[path[i][0]].get_text().set_text('OOO-NO I have been eaten!')
-                print("OOO-NO I have been eaten!")
-                outcome = True
+                grid.get_celld()[path[i][0]].get_text().set_text('Caught')
+                print("OOO-NO I have been caught!")
+                outcome -= 50
+                break
                 
             # Update cell if player reaches goal
             elif path[i][0] == path[i-1][0] and city[path[i][0]] == 2:
-                grid.get_celld()[path[i][0]].set_facecolor(LIGHT_GREEN)
-                grid.get_celld()[path[i][0]].get_text().set_text(history[path[i][0]] + '\nPlayer is out')
-                print("Congratulations! You reached the goal at t={}".format(i))
-                outcome = True
+                grid.get_celld()[path[i][0]].set_facecolor(LIGHT_ORANGE)
+                grid.get_celld()[path[i][0]].get_text().set_text('Joker Robbing')
+                # print("Robbing the bank at t={}".format(i))
+                outcome += 10
                           
 
         # display.display(fig)
         # display.clear_output(wait=True)
         
         plt.draw()
-        plt.pause(0.1)
-        if outcome:
-            break      
+        plt.pause(pause_time)
+        # if outcome:
+        #     break      
     
-    plt.waitforbuttonpress(0)
-    timestamp = datetime.now()
-    file_path = os.path.join(os.path.realpath(os.path.dirname(__file__)), '..') 
-    filename = file_path + "/images/problem_1/cityRun_" + method + "_" + timestamp.strftime("%b-%d-%Y_%H-%M-%S")
-    plt.savefig(fname=filename)
-    plt.close(fig)
+    # plt.waitforbuttonpress(0)
+    if save:
+        timestamp = datetime.now()
+        file_path = os.path.join(os.path.realpath(os.path.dirname(__file__)), '..') 
+        filename = file_path + "/images/problem_1/cityRun_" + method + "_" + timestamp.strftime("%b-%d-%Y_%H-%M-%S")
+        plt.savefig(fname=filename)
+        plt.close(fig)
     return outcome
 

@@ -17,7 +17,7 @@ def B():
     ##################################
     ############## A #################
     ##################################
-    print('Running problem 1, task B (1)')
+    print('Running problem 2, task B')
     # Description of the maze as a numpy array
     # with the convention 
     # 0 = empty cell
@@ -28,26 +28,46 @@ def B():
         [2, 0, 0, 0, 0, 2]
     ])
 
-    gotham.draw_city(city)
+    # gotham.draw_city(city)
 
-    # # Create an environment 
-    # can_stay = False
-    # env = gotham.City(maze, can_stay=can_stay)
-    # # env.show()
+    # Create an environment 
+    can_stay = False
+    env = gotham.City(city, can_stay=can_stay)
+    # env.show()
 
     # # Finite horizon
     # horizon = 20
 
-    # # Solve the MDP problem with dynamic programming 
-    # _, policy = mz.dynamic_programming(env,horizon)
+    # Generate plot for lambda and T
+    gamma_vec   = np.arange(start=0.1, stop=1, step = 0.01 )
+    epsilon     = 0.01
+    for gamma in gamma_vec:
+        print('Gamma: {:.2f}, Episilon: {:.2f}'.format(gamma, epsilon))
+        V, policy = gotham.value_iteration(env, gamma=gamma, epsilon=epsilon)
+        plt.scatter(gamma, V[8], color='k')
+    plt.show()
 
-    # # Simulate the shortest path starting from position A with dynamic programming
-    # method = 'ValIter'
-    # start  = ((0,0),(6,5))  # ((Player_pose),(Minotaur_pose))
-    # path = env.simulate(start, policy, method) # Generate the path for the player and the minotaur
 
-    # # Animation of the game
-    # mz.animate_solution(maze, path, method, can_stay=can_stay)
+    # Solve the MDP problem with Value Iteration
+    method = 'ValIter'
+    gamma = 0.9
+    epsilon = 0.01
+    V, policy = gotham.value_iteration(env, gamma=gamma, epsilon=epsilon)
+    
+    # Simulate the shortest path starting from position A with Value Iteration
+    start  = ((0,0),(1,2))  # ((Player_pose),(Minotaur_pose))
+    path = env.simulate(start, policy, method, iterations=50) # Generate the path for the player and the minotaur
+    
+    banks = [(0,0), (2,0), (0, 5), (5,5)]
+    score = 0
+    prev_step = (2,2)
+    for step in path:
+        if step[0] in banks and prev_step[0] in banks:
+            score += 10
+        prev_step = step
+    print('Score: {}'.format(score))
+    # Animation of the game
+    gotham.animate_solution(city, path, method, can_stay=can_stay, pause_time=0.5)
 
 
 

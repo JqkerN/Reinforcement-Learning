@@ -38,7 +38,7 @@ def B_1():
     # Create an environment 
     can_stay = False
     env = mz.Maze(maze, can_stay=can_stay)
-    # env.show()
+    env.show()
 
     # Finite horizon
     horizon = 20
@@ -166,7 +166,7 @@ def C():
 
 if __name__ == '__main__':
     start = time.time()
-    # B_1()
+    B_1()
     # B_2()
-    C()
+    # C()
     print('Script runtime: {}'.format(time.time() - start))
