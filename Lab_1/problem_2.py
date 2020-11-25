@@ -56,7 +56,7 @@ def B():
 
     # Solve the MDP problem with Value Iteration
     method = 'ValIter'
-    gamma = 0.9
+    gamma = 0.86
     epsilon = 0.01
     V, policy = gotham.value_iteration(env, gamma=gamma, epsilon=epsilon)
     
