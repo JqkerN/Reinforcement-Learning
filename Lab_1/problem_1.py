@@ -7,6 +7,8 @@
 Ilian Corneliussen  950418-2438  ilianc@kth.se
 Daniel Hirsch       960202-5737  dhirsch@kth.se   
 """
+
+
 import numpy as np
 import src.maze as mz 
 import matplotlib.pyplot as plt
@@ -15,7 +17,7 @@ import time
 
 def B_1():
     ##################################
-    ############## A #################
+    ############## B(1) ##############
     ##################################
     print('Running problem 1, task B (1)')
     # Description of the maze as a numpy array
@@ -47,7 +49,7 @@ def B_1():
     _, policy = mz.dynamic_programming(env,horizon)
 
     # Simulate the shortest path starting from position A with dynamic programming
-    method = 'ValIter'
+    method = 'DynProg'
     start  = ((0,0),(6,5))  # ((Player_pose),(Minotaur_pose))
     path = env.simulate(start, policy, method) # Generate the path for the player and the minotaur
 
@@ -56,7 +58,7 @@ def B_1():
 
 def B_2():
     ##################################
-    ############## B #################
+    ############## B(2) ##############
     ##################################
     print('Running problem 1, task B (2)')
     # Description of the maze as a numpy array
@@ -87,9 +89,8 @@ def B_2():
         env = mz.Maze(maze, can_stay=can_stay[i])
         x_vec = list()
         y_vec = list()
-        print(can_stay[i])
         for T in range(max_T):
-            print('T={}'.format(T))
+            print('T={}/{}'.format(T, max_T))
             y_value = 0
             horizon = T
             _, policy = mz.dynamic_programming(env,horizon)
@@ -159,14 +160,11 @@ def C():
             out_n_alive += 1
 
     print('Probability of getting out alive (10,000 runs): {}'.format(out_n_alive/iterations))
-    # Animation of the game
-    # for _ in range(100):
-    #     path = env.simulate(start, policy, method, goal=(6,5)) 
-    #     mz.animate_solution(maze, path, method, can_stay=can_stay)
+
 
 if __name__ == '__main__':
     start = time.time()
-    #B_1()
-    # B_2()
+    B_1()
+    B_2()
     C()
     print('Script runtime: {}'.format(time.time() - start))
