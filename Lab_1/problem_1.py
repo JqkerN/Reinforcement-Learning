@@ -166,7 +166,7 @@ def C():
 
 if __name__ == '__main__':
     start = time.time()
-    B_1()
+    #B_1()
     # B_2()
-    # C()
+    C()
     print('Script runtime: {}'.format(time.time() - start))

@@ -34,18 +34,24 @@ def B():
     can_stay = False
     env = gotham.City(city, can_stay=can_stay)
     # env.show()
-
+    print("Number of states: {}".format(env.n_states))
     # # Finite horizon
     # horizon = 20
 
-    # Generate plot for lambda and T
-    gamma_vec   = np.arange(start=0.1, stop=1, step = 0.01 )
-    epsilon     = 0.01
-    for gamma in gamma_vec:
-        print('Gamma: {:.2f}, Episilon: {:.2f}'.format(gamma, epsilon))
-        V, policy = gotham.value_iteration(env, gamma=gamma, epsilon=epsilon)
-        plt.scatter(gamma, V[8], color='k')
-    plt.show()
+    # # Generate plot for lambda and T
+    # gamma_vec   = np.arange(start=0.1, stop=1, step = 0.01 )
+    # epsilon     = 0.01
+    # V_vec = list()
+
+    # for gamma in gamma_vec:
+    #     # print('Gamma: {:.2f}, Episilon: {:.2f}'.format(gamma, epsilon))
+    #     V, policy = gotham.value_iteration(env, gamma=gamma, epsilon=epsilon)
+    #     V_vec.append(V[8])
+    # plt.plot(gamma_vec, V_vec, '-o', c='k')
+    # plt.title('Value function as a function of the discount factor')
+    # plt.xlabel('lambda')
+    # plt.ylabel('Value function')
+    # plt.show()
 
 
     # Solve the MDP problem with Value Iteration
@@ -67,7 +73,7 @@ def B():
         prev_step = step
     print('Score: {}'.format(score))
     # Animation of the game
-    gotham.animate_solution(city, path, method, can_stay=can_stay, pause_time=0.5)
+    gotham.animate_solution(city, path, method, can_stay=can_stay, pause_time=0.1, save=True)
 
 
 

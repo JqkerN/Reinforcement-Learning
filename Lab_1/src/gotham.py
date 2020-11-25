@@ -534,9 +534,33 @@ def animate_solution(city, path, method, can_stay=False, pause_time=0.5, save=Fa
 
     outcome = False        # Condition for stoping the iteration is fulfilled or not.
     history = dict()    # Keeping track of the old moves
-
+    bank_score = {
+                    (0,0): 0,
+                    (2,0): 0,
+                    (0,5): 0,
+                    (2,5): 0
+                }
     # Update the color at each frame
+    h_player = 1.0/rows
+    w_player = 1.0/cols
+    h_police = 1.0/rows - 0.01
+    w_police = 1.0/cols - 0.01
+
     for i in range(len(path)):
+        plt.axis((0,1,0,1))
+        player_x_prev =  path[i-1][0][1]*w_player + w_player/2
+        player_x      =  path[i][0][1]*w_player + w_player/2
+        player_y_prev =  (rows-path[i-1][0][0])*h_player - h_player/2
+        player_y      =  (rows-path[i][0][0])*h_player - h_player/2
+        plt.plot((player_x_prev, player_x), (player_y_prev, player_y), c='k')
+
+        police_x_prev =  path[i-1][1][1]*w_police + w_police/2
+        police_x      =  path[i][1][1]*w_police + w_police/2
+        police_y_prev =  (rows-path[i-1][1][0])*h_police - h_police/2
+        police_y      =  (rows-path[i][1][0])*h_police - h_police/2
+        plt.plot((police_x_prev, police_x), (police_y_prev, police_y), c='g')
+
+
         if i > 0:
             # Remove the old player position and add index.
             grid.get_celld()[path[i-1][0]].set_facecolor(col_map[city[path[i-1][0]]])
@@ -547,10 +571,10 @@ def animate_solution(city, path, method, can_stay=False, pause_time=0.5, save=Fa
         
  
         grid.get_celld()[path[i][1]].set_facecolor(LIGHT_RED)
-        grid.get_celld()[path[i][1]].get_text().set_text('Batman')
+        grid.get_celld()[path[i][1]].get_text().set_text('Police')
 
         grid.get_celld()[path[i][0]].set_facecolor(LIGHT_ORANGE)
-        grid.get_celld()[path[i][0]].get_text().set_text('Joker')
+        grid.get_celld()[path[i][0]].get_text().set_text('Robber')
 
 
         if i > 0:
@@ -564,26 +588,33 @@ def animate_solution(city, path, method, can_stay=False, pause_time=0.5, save=Fa
                 
             # Update cell if player reaches goal
             elif path[i][0] == path[i-1][0] and city[path[i][0]] == 2:
-                grid.get_celld()[path[i][0]].set_facecolor(LIGHT_ORANGE)
-                grid.get_celld()[path[i][0]].get_text().set_text('Joker Robbing')
-                # print("Robbing the bank at t={}".format(i))
+                # grid.get_celld()[path[i][0]].set_facecolor(LIGHT_ORANGE)
+                # grid.get_celld()[path[i][0]].get_text().set_text('')
+                # # print("Robbing the bank at t={}".format(i))
+                bank_score[path[i][0]] += 10
                 outcome += 10
-                          
-
+        
         # display.display(fig)
         # display.clear_output(wait=True)
-        
+        bank_list = [(0,0), (2,0), (0,5), (2,5)]                  
+        for bank in bank_list:
+            if bank == path[i][0]:
+                grid.get_celld()[bank].get_text().set_text(str(bank_score[bank]) + ' Robber')
+            else:
+                grid.get_celld()[bank].get_text().set_text(str(bank_score[bank]))
         plt.draw()
         plt.pause(pause_time)
         # if outcome:
         #     break      
     
+    
     # plt.waitforbuttonpress(0)
     if save:
         timestamp = datetime.now()
         file_path = os.path.join(os.path.realpath(os.path.dirname(__file__)), '..') 
-        filename = file_path + "/images/problem_1/cityRun_" + method + "_" + timestamp.strftime("%b-%d-%Y_%H-%M-%S")
+        filename = file_path + "/images/problem_2/cityRun_" + method + "_" + timestamp.strftime("%b-%d-%Y_%H-%M-%S")
         plt.savefig(fname=filename)
         plt.close(fig)
+    print(bank_score)
     return outcome
 
