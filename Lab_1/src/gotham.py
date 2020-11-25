@@ -509,7 +509,7 @@ def animate_solution(city, path, method, can_stay=False, pause_time=0.5, save=Fa
 
     # Remove the axis ticks and add title title
     ax = plt.gca()
-    ax.set_title('Policy simulation, can_stay=' + str(can_stay))
+    ax.set_title('Policy simulation, score = 0')
     ax.set_xticks([])
     ax.set_yticks([])
 
@@ -541,24 +541,30 @@ def animate_solution(city, path, method, can_stay=False, pause_time=0.5, save=Fa
                     (2,5): 0
                 }
     # Update the color at each frame
-    h_player = 1.0/rows
-    w_player = 1.0/cols
-    h_police = 1.0/rows - 0.01
-    w_police = 1.0/cols - 0.01
+    h = 1.0/rows 
+    w = 1.0/cols 
+    h_player = 1.0/rows + 0.04
+    w_player = 1.0/cols + 0.04
+    h_police = 1.0/rows - 0.04
+    w_police = 1.0/cols - 0.04
 
     for i in range(len(path)):
-        plt.axis((0,1,0,1))
-        player_x_prev =  path[i-1][0][1]*w_player + w_player/2
-        player_x      =  path[i][0][1]*w_player + w_player/2
-        player_y_prev =  (rows-path[i-1][0][0])*h_player - h_player/2
-        player_y      =  (rows-path[i][0][0])*h_player - h_player/2
-        plt.plot((player_x_prev, player_x), (player_y_prev, player_y), c='k')
 
-        police_x_prev =  path[i-1][1][1]*w_police + w_police/2
-        police_x      =  path[i][1][1]*w_police + w_police/2
-        police_y_prev =  (rows-path[i-1][1][0])*h_police - h_police/2
-        police_y      =  (rows-path[i][1][0])*h_police - h_police/2
-        plt.plot((police_x_prev, police_x), (police_y_prev, police_y), c='g')
+        if i > 0:
+
+            plt.axis((0,1,0,1))
+            player_x_prev =  path[i-1][0][1]*w + w_player/2
+            player_x      =  path[i][0][1]*w + w_player/2
+            player_y_prev =  (rows-path[i-1][0][0])*h - h_player/2
+            player_y      =  (rows-path[i][0][0])*h - h_player/2
+            plt.plot((player_x_prev, player_x), (player_y_prev, player_y), c='k')
+
+            police_x_prev =  path[i-1][1][1]*w + w_police/2
+            police_x      =  path[i][1][1]*w + w_police/2
+            police_y_prev =  (rows-path[i-1][1][0])*h - h_police/2
+            police_y      =  (rows-path[i][1][0])*h - h_police/2
+            plt.plot((police_x_prev, police_x), (police_y_prev, police_y), c='r')
+
 
 
         if i > 0:
@@ -602,6 +608,7 @@ def animate_solution(city, path, method, can_stay=False, pause_time=0.5, save=Fa
                 grid.get_celld()[bank].get_text().set_text(str(bank_score[bank]) + ' Robber')
             else:
                 grid.get_celld()[bank].get_text().set_text(str(bank_score[bank]))
+        ax.set_title('Policy simulation, score = {}'.format(outcome))
         plt.draw()
         plt.pause(pause_time)
         # if outcome:

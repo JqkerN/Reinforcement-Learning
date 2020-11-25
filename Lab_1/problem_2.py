@@ -56,7 +56,7 @@ def B():
 
     # Solve the MDP problem with Value Iteration
     method = 'ValIter'
-    gamma = 0.86
+    gamma = 0.8
     epsilon = 0.01
     V, policy = gotham.value_iteration(env, gamma=gamma, epsilon=epsilon)
     
@@ -73,7 +73,7 @@ def B():
         prev_step = step
     print('Score: {}'.format(score))
     # Animation of the game
-    gotham.animate_solution(city, path, method, can_stay=can_stay, pause_time=0.1, save=True)
+    gotham.animate_solution(city, path, method, can_stay=can_stay, pause_time=0.5, save=True)
 
 
 
