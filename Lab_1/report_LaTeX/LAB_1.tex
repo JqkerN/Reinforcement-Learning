@@ -99,12 +99,39 @@ Robbing: $r(R_x = B_x , R_y = B_y |s,a) = 0 $, where $B_x$, $B_y$ is the goal po
 Out-of-boundary: $r(s'\in S_u |s,a) = -\infty $
 
 \textbf{Transition Probabilities}:\\
-$P_t(s' \in S_a |s,a) = 1/n$, where n is the number of possible moves for the Police as stated in the lab instruction, and \\$P_t(s \in S_u |s,a) = 0$ if trying to take an action that is out-of-boundary. 
+$P_t(s' \in S_a |s,a) = 1/n$, where n is the number of possible moves for the Police(n is either $3$ or $2$) as stated in the lab instruction, and \\$P_t(s \in S_u |s,a) = 0$ if trying to take an action that is out-of-boundary. 
 
         
 
 
 \subsection*{B)}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Lab_1/images/problem_2/valueFunction.png}
+    \caption{\small The Value function(evaluated at the initial state) as a function of the discount factor(\lambda). }
+    \label{fig:Valfunc}
+\end{figure}
+
+
+
+
+\noindent 
+In Figure \ref{fig:Valfunc} the value function evaluated in the initial state is increasing for increasing values of lambda. This was expected because with an larger $\lambda$ we take more future rewards into account.   
+
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Lab_1/images/problem_2/cityRun_ValIter_Nov-25-2020_11-55-18.png}
+    \caption{\small Illustration of the optimal policy for \lambda > 0.85  }
+    \label{fig:optpol1}
+\end{figure}
+
+As seen in Figure \ref{fig:optpol1} compared to Figure \ref{fig:optpol2} the optimal policy changes depending on $\lambda$. With $\lambda > 0.85$ the optimal policy is the behaviour from Figure \ref{fig:optpol1}, i.e. just robbing and moving between Bank1 and Bank4. 
+With $\lambda \leq 0.85$ we obtain the optimal policy from Figure \ref{fig:optpol2}, i.e. just robbing and moving between Bank1 and Bank2. 
+
 
 
 \end{document}
