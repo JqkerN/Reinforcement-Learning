@@ -1,23 +1,119 @@
-\documentclass{article}
+ \documentclass{article}
 \usepackage[utf8]{inputenc}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage[labelsep=period]{caption} % Figur. istället för Figur:
+\usepackage{relsize}
+\usepackage{multirow}
+\usepackage[export]{adjustbox}
+\usepackage{subcaption}
+\usepackage{wrapfig}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{geometry}
+\usepackage{parskip}
 
-\title{Reinforcement Learning HW 2}
-\author{Ilian Corenliussen, Daniel Hirsch}
+\title{Reinforcement Learning\\
+       Homework 1}
+
+\author{Ilian Corenliussen, 950418-2438, ilianc@kth.se\\ 
+        Daniel Hirsch, 960202-5737, dhirsch@kth.se}
 \date{November 2020}
 
 \begin{document}
 
 \maketitle
 
-\section{Machine Replacement}
+\section{Q-learning and SARSA}
 \subsection*{a)}
-\subsection*{b)}
+\textbf{Q-learning Algorithm:} \begin{equation}
+ Q^{t+1}(s_t,a) = Q^t(s_t,a) + \alpha \left(R(s_t,a) + \lambda \max_{a \in A}\{Q^t(s_{t+1}, a)\} - Q^t(s_t,a) \right)\end{equation}
 
+We need to calculate the reward for t=2 and the selected action. This can be solved by solving the equation (1). Where $Q^2(B,c)=60$ and by inspecting the matrix we get that the action in $t=2$ is $a$ and for $t=1$ are action $c$. This gives us:
+\begin{equation*}
+    R_2(A,a) =  \frac{1}{\alpha}(Q^{2}(A,a) - Q^1(A,a) ) - \lambda Q^1(B, a) + Q^1(A,a) = 10( 11 - 0) - 0.5\cdot60 + 0 = 110-30= 80
+\end{equation*}
+\begin{equation*}
+    R_1(B,c) =  \frac{1}{\alpha}(Q^{2}(B,c) - Q^1(B,c) ) - \lambda Q^1(A, a) + Q^1(B, c) = 10( 60 - 0) - 0.5\cdot 0 + 0 = 600
+\end{equation*}
+\textbf{ANSWER:} (B,c,600);(A,a,80)
 
-\section{Optimal Stopping}
-\subsection*{a)}
 \subsection*{b)}
+Using equation (1) for the $Q^3-Q^7$ to get the Q-values for the 7th iteration.
+\begin{equation*}
+     Q^{3}(B,a) = 0 + 0.1(100 + 0.5\cdot11 - 0 ) = 10.6
+\end{equation*}
+\begin{equation*}
+     Q^{4}(A,b) = 0 + 0.1(60 + 0.5\cdot60 - 0 ) = 9
+\end{equation*}
+\begin{equation*}
+     Q^{5}(B,c) = 60 + 0.1(70 + 0.5\cdot0 -60 ) = 61
+\end{equation*}
+\begin{equation*}
+     Q^{6}(C,b) = 0 + 0.1(40 + 0.5\cdot11 - 0 ) = 4.6
+\end{equation*}
+\begin{equation*}
+     Q^{7}(A,a) = 11 + 0.1(20 + 0.5\cdot4.6 -11 ) = 12.3
+\end{equation*}
+\textbf{ANSWER:} Which gives the Q-values:
+\begin{equation*}
+    Q^7=
+    \left[
+    \begin{array}{ccc}
+         12.1 & 9 & 0 \\
+         10.6 & 0 & 61 \\
+         0 & 4.6 & 0 \\
+    \end{array}
+    \right]
+\end{equation*}
 \subsection*{c)}
+The greedy policy at the 7th iteration will choice the action with the higest value, i.e. $\pi(A)=a$, $\pi(B)=c$, and $\pi(C)=b$.
+
+\textbf{ANSWER:} $\pi(A)=a$, $\pi(B)=c$, and $\pi(C)=b$.
+
 \subsection*{d)}
+\textbf{SARSA Algorithm:} \begin{equation}
+ Q^{t+1}(s_t,a) = Q^t(s_t,a) + \alpha \left(R(s_t,a) + \lambda Q^t(s_{t+1}, a_{t+1}) - Q^t(s_t,a) \right)\end{equation}
+We calculated $Q^1-Q^7$ to get the Q-values at the 7th iteration by SARSA algorithm. 
+\begin{equation*}
+     Q^{1}(B,c) = 0 + 0.1(600 + 0.5\cdot0 - 0 ) = 60
+\end{equation*}
+\begin{equation*}
+     Q^{2}(A,a) = 0 + 0.1(80 + 0.5\cdot0 - 0 ) = 8
+\end{equation*}
+\begin{equation*}
+     Q^{3}(B,a) = 0 + 0.1(100 + 0.5\cdot0 - 0 ) = 10
+\end{equation*}
+\begin{equation*}
+     Q^{4}(A,b) = 0 + 0.1(60 + 0.5\cdot60 - 0 ) = 9
+\end{equation*}
+\begin{equation*}
+     Q^{5}(B,c) = 60 + 0.1(70 + 0.5\cdot0 - 60 ) = 61
+\end{equation*}
+\begin{equation*}
+     Q^{6}(C,b) = 0 + 0.1(40 + 0.5\cdot8 - 0 ) = 4.4
+\end{equation*}
+\begin{equation*}
+     Q^{7}(A,a) = 8 + 0.1(20 + 0.5\cdot0 -8 ) = 9.2
+\end{equation*}
+
+\textbf{ANSWER:}
+\begin{equation*}
+    Q^7=
+    \left[
+    \begin{array}{ccc}
+        9,2 & 9 & 0 \\
+         10 & 0 & 61 \\
+         0 & 4.4 & 0 \\
+    \end{array}
+    \right]
+\end{equation*}
+
+\subsection*{e)}
+The greedy policy at the 7th iteration will choice the action with the higest value, i.e. $\pi(A)=a$, $\pi(B)=c$, and $\pi(C)=b$.
+
+\textbf{ANSWER:} $\pi(A)=a$, $\pi(B)=c$, and $\pi(C)=b$.
+
 
 \end{document}

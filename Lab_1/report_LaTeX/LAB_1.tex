@@ -29,11 +29,11 @@
 \section*{Problem 1: \\
         The Maze and the Random Minotaur}
 \subsection*{A)}
-The problem can me modelled as an MDP such that, the number of states is depending on the grid space and the player and Minotaur position, e.g. $S = \{((P_x, H_y),(P_x, M_y) )\} $ where $P_x$ and $P_y$ is the player and $M_x$ and $M_y$ the Minotaur position x and y position within the grid. The state space can be divided into $S = {S_a, S_u}$ where $S_a$ is the allowed states and $S_u$ is the unreachable states, such as wall or out-of-boundary.
+The problem can me modelled as an MDP such that, the number of states is depending on the grid space and the player and Minotaur position, e.g. $S = \{((P_x, P_y),(M_x, M_y) )\} $ where $P_x$ and $P_y$ is the player and $M_x$ and $M_y$ the Minotaur x and y position within the grid. The state space can be divided into $S = {S_a, S_u}$ where $S_a$ is the allowed states and $S_u$ is the unreachable states, such as wall or out-of-boundary.
 
 
 \textbf{State space:}\\
-$S = \{((P_x, H_y),(P_x, M_y) )\} $, 3136 number of states. 
+$S = \{((P_x, P_y),(M_x, M_y) )\} $, 3136 number of states. 
 
 \textbf{Actions}: \\
 The actions can be as described in the lab instructions as left, right, up, down or stay at the current position, $A = \{ A_{left}, A_{right}, A_{up}, A_{down}, A_{stay} \}$. 
@@ -73,7 +73,7 @@ By assuming that the players life is geometrically distributed with mean $E[T] =
 
 
 
-
+\pagebreak
 
 
 
@@ -84,7 +84,7 @@ By assuming that the players life is geometrically distributed with mean $E[T] =
         
         
 \subsection*{A)}
-The problem can me modelled as an MDP such that, the number of states is depending on the grid space and the robber and police position, e.g. $S = \{((R_x, R_y),(P_x, P_y) )\} $ where $R_x$ and $R_y$ is the robber and $P_x$ and $P_y$ the police position x and y position within the grid. The state space can be divided into $S = {S_a, S_u}$ where $S_a$ is the allowed states and $S_u$ is the unreachable states, such as out-of-boundary.
+The problem can me modelled as an MDP such that, the number of states is depending on the grid space and the robber and police position, e.g. $S = \{((R_x, R_y),(P_x, P_y) )\} $ where $R_x$ and $R_y$ is the robber and $P_x$ and $P_y$ the police x and y position within the grid. The state space can be divided into $S = {S_a, S_u}$ where $S_a$ is the allowed states and $S_u$ is the unreachable states, such as out-of-boundary.
 
 
 \textbf{State space:}\\
@@ -95,7 +95,7 @@ The actions can be as described in the lab instructions as left, right, up, down
 
 \textbf{Rewards:} \\
 Caught: $r(R_x = P_x , R_y = P_y |s,a) = -100 $\\ 
-Robbing: $r(R_x = B_x , R_y = B_y |s,a) = 0 $, where $B_x$, $B_y$ is the goal position\\
+Robbing: $r(R_x = B_x , R_y = B_y |s,a) = 0 $, where $B_x$, $B_y$ is the banks positions\\
 Out-of-boundary: $r(s'\in S_u |s,a) = -\infty $
 
 \textbf{Transition Probabilities}:\\
@@ -124,9 +124,15 @@ In Figure \ref{fig:Valfunc} the value function evaluated in the initial state is
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{Lab_1/images/problem_2/cityRun_ValIter_Nov-25-2020_11-55-18.png}
-    \caption{\small Illustration of the optimal policy for \lambda > 0.85  }
+    \includegraphics[width=0.8\textwidth]{Lab_1/images/problem_2/cityRun_ValIter_Nov-25-2020_13-23-59.png}
+    \caption{\small Illustration of the optimal policy for $\lambda > 0.85$, where the red and the black line shows the path of the police and the robber. }
     \label{fig:optpol1}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Lab_1/images/problem_2/cityRun_ValIter_Nov-25-2020_13-29-52.png}
+    \caption{\small Illustration of the optimal policy for $\lambda \leq 0.85$, where the red and the black line shows the path of the police and the robber.  }
+    \label{fig:optpol2}
 \end{figure}
 
 As seen in Figure \ref{fig:optpol1} compared to Figure \ref{fig:optpol2} the optimal policy changes depending on $\lambda$. With $\lambda > 0.85$ the optimal policy is the behaviour from Figure \ref{fig:optpol1}, i.e. just robbing and moving between Bank1 and Bank4. 
