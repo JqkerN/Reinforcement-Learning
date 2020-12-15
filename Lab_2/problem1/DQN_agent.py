@@ -15,6 +15,44 @@
 
 # Load packages
 import numpy as np
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import copy
+import pickle
+import time
+
+
+
+
+### Neural Network ###
+class MyNetwork(nn.Module):
+    """ Create a feedforward neural network """
+    def __init__(self, input_size, output_size):
+        super().__init__()
+
+        # Create input layer with ReLU activation
+        self.input_layer = nn.Linear(input_size, 8)
+        self.input_layer_activation = nn.ReLU()
+        self.hidden_layer = nn.Linear(input_size, 128)
+        self.hidden_layer_activation = nn.ReLU()
+
+        # Create output layer
+        self.output_layer = nn.Linear(128, output_size)
+
+    def forward(self, x):
+        # Function used to compute the forward pass
+
+        # Compute first layer
+        l1 = self.input_layer(x)
+        l1 = self.input_layer_activation(l1)
+        l1 = self.hidden_layer(l1)
+        l1 = self.hidden_layer_activation(l1)
+
+        # Compute output layer
+        out = self.output_layer(l1)
+        return out
+
 
 class Agent(object):
     ''' Base agent class, used as a parent class
@@ -29,14 +67,79 @@ class Agent(object):
     def __init__(self, n_actions: int):
         self.n_actions = n_actions
         self.last_action = None
+        self.network = MyNetwork(8, n_actions)
+        self.target_network = pickle.loads(pickle.dumps(self.network))
+        self.optimizer = optim.Adam(self.network.parameters(), lr=0.0001)
 
-    def forward(self, state: np.ndarray):
+
+    def update_target_network(self):
+        self.target_network = pickle.loads(pickle.dumps(self.network))
+
+
+    def greedy_epsilon(self, Q_values, epsilon):
+        ''' Takes the greedy action '''
+        probability = np.random.uniform()
+        if probability > epsilon:
+            return Q_values.max(1)[1].item()
+        else: 
+            return np.random.randint(0, self.n_actions)
+
+
+    def forward(self, state: np.ndarray, epsilon):
         ''' Performs a forward computation '''
-        pass
+        state_tensor = torch.tensor([state],
+                                    requires_grad=True,
+                                    dtype=torch.float32)
+        Q_values = self.network.forward(state_tensor)
+        action = self.greedy_epsilon(Q_values, epsilon)
+        return action
 
-    def backward(self):
+
+    def backward(self, states, actions, rewards, next_states, dones, discount_factor):
+        # Training process, set gradients to 0
+        self.optimizer.zero_grad()
+
+        # Compute output of the network given the states batch
+        values = self.network.forward(torch.tensor(states, 
+                                        requires_grad=True,
+                                        dtype=torch.float32))
+
+        # Computes the target values for the states batch
+        target_values = self.target_network.forward(torch.tensor(next_states, 
+                                                    requires_grad=True,
+                                                    dtype=torch.float32))
+
+        Q_target = list()
+
+        Q_values = torch.zeros(1, len(dones),
+                                requires_grad=False,
+                                dtype=torch.float32)
+        i = 0
+        for done in dones:
+            if done == True:
+                Q_target.append(rewards[i])
+            else:
+                Q_target.append(rewards[i] + discount_factor*target_values[i].max(0)[0].item())
+            Q_values[0,i] = values[i, actions[i]]
+            i += 1
+    
+        Q_target = torch.tensor([Q_target],
+                                requires_grad=True,
+                                dtype=torch.float32)
+
         ''' Performs a backward pass on the network '''
-        pass
+        # Compute loss function
+        loss = nn.functional.mse_loss(Q_values, Q_target)
+
+        # Compute gradient
+        loss.backward()
+
+        # Clip gradient norm to 1
+        nn.utils.clip_grad_norm_(self.network.parameters(), max_norm=1.)
+
+        # Perform backward pass (backpropagation)
+        self.optimizer.step()
+
 
 
 class RandomAgent(Agent):
