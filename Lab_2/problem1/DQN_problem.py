@@ -90,16 +90,16 @@ env = gym.make('LunarLander-v2')
 env.reset()
 
 ### Create Experience replay buffer ###
-L = 10000
+L = 20000
 buffer = ExperienceReplayBuffer(maximum_length=L)
 
 # Parameters
-N_episodes = 300                            # Number of episodes
-discount_factor = 0.95                       # Value of the discount factor
+N_episodes = 600                            # Number of episodes
+discount_factor = 0.985                      # Value of the discount factor
 n_ep_running_average = 50                    # Running average of 50 episodes
 n_actions = env.action_space.n               # Number of available actions
 dim_state = len(env.observation_space.high)  # State dimensionality
-
+N = 24                                      # BATCH SIZE
 # We will use these variables to compute the average episodic reward and
 # the average number of steps per episode
 episode_reward_list = []       # this list contains the total reward per episode
@@ -112,18 +112,19 @@ agent = Agent(n_actions)
 
 # trange is an alternative to range in python, from the tqdm library
 # It shows a nice progression bar that you can update with useful information
+print('N_episodes: {}\ndiscount_factor: {}\nL: {}\nN: {}\n'.format(N_episodes, discount_factor, L, N))
 EPISODES = trange(N_episodes, desc='Episode: ', leave=True)
-
 for k in EPISODES:
     # Reset enviroment data and initialize variables
     done = False
     state = env.reset()
     total_episode_reward = 0.
     t = 0
-    N = 16 # BATCH SIZE
     epsilon = max(EPSILON_MIN, EPSILON_MAX * (EPSILON_MIN / EPSILON_MAX) ** (k / (0.9*N_episodes - 1)))
 
     while not done:
+        if N_episodes-k <= 3 or k%20 == 0:
+            env.render()  
         if t%int(L/N) == 0:
             agent.update_target_network()
         # Take a random action
@@ -146,8 +147,7 @@ for k in EPISODES:
         # Perform training only if we have more than 3 elements in the buffer
         if len(buffer) >= N:
             # Sample a batch of N elements
-            states, actions, rewards, next_states, dones = buffer.sample_batch(n=N)
-            agent.backward(states, actions, rewards, next_states, dones, discount_factor)
+            agent.backward(*buffer.sample_batch(n=N), discount_factor)
         
         # Update state for next iteration
         state = next_state
@@ -178,7 +178,7 @@ for k in EPISODES:
 
 
 
-
+torch.save(agent.network, 'neural-network-avg_'+str(running_average(episode_reward_list, n_ep_running_average)[-1])+'.pth')
 
 
 

@@ -32,13 +32,15 @@ class MyNetwork(nn.Module):
         super().__init__()
 
         # Create input layer with ReLU activation
-        self.input_layer = nn.Linear(input_size, 8)
+        self.input_layer = nn.Linear(input_size, 50)
         self.input_layer_activation = nn.ReLU()
-        self.hidden_layer = nn.Linear(input_size, 128)
+        self.hidden_layer = nn.Linear(50, 50)
+        self.hidden_layer_activation = nn.ReLU()
+        self.hidden_layer = nn.Linear(50, 50)
         self.hidden_layer_activation = nn.ReLU()
 
         # Create output layer
-        self.output_layer = nn.Linear(128, output_size)
+        self.output_layer = nn.Linear(50, output_size)
 
     def forward(self, x):
         # Function used to compute the forward pass
@@ -69,7 +71,7 @@ class Agent(object):
         self.last_action = None
         self.network = MyNetwork(8, n_actions)
         self.target_network = pickle.loads(pickle.dumps(self.network))
-        self.optimizer = optim.Adam(self.network.parameters(), lr=0.0001)
+        self.optimizer = optim.Adam(self.network.parameters(), lr=0.002)
 
 
     def update_target_network(self):
