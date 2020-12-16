@@ -19,7 +19,7 @@ import gym
 import torch
 import matplotlib.pyplot as plt
 from tqdm import trange
-from DQN_agent import Agent
+from DQN_agent import Agent, RandomAgent
 from collections import deque, namedtuple
 
 Experience = namedtuple('Experience',
@@ -107,7 +107,7 @@ episode_reward_list = []       # this list contains the total reward per episode
 episode_number_of_steps = []   # this list contains the number of steps per episode
 
 # Agent initialization
-agent = Agent(n_actions)
+agent = RandomAgent(n_actions)
 
 ### Training process
 
@@ -129,7 +129,7 @@ for k in EPISODES:
         if t%int(L/N) == 0:
             agent.update_target_network()
         # Take a random action
-        action = agent.forward(state, epsilon)
+        action = agent.forward(state)
 
         # Get next state and reward.  The done variable
         # will be True if you reached the goal position,
@@ -143,13 +143,6 @@ for k in EPISODES:
         # Update episode reward
         total_episode_reward += reward
 
-
-        ### TRAINING ###
-        # Perform training only if we have more than 3 elements in the buffer
-        if len(buffer) >= N:
-            # Sample a batch of N elements
-            agent.backward(*buffer.sample_batch(n=N), discount_factor)
-        
         # Update state for next iteration
         state = next_state
         t += 1
