@@ -1,0 +1,60 @@
+ \documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage[labelsep=period]{caption} % Figur. istället för Figur:
+\usepackage{relsize}
+\usepackage{multirow}
+\usepackage[export]{adjustbox}
+\usepackage{subcaption}
+\usepackage{wrapfig}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{geometry}
+\usepackage{parskip}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+
+\title{Reinforcement Learning EL2805\\
+       Laboration 2}
+
+\author{Ilian Corenliussen, 950418-2438, ilianc@kth.se\\ 
+        Daniel Hirsch, 960202-5737, dhirsch@kth.se}
+\date{December 2020}
+
+\begin{document}
+
+\maketitle
+
+\section*{Problem 1: \\
+        Deep Q-Networks (DQN)}
+\subsection*{A)}
+
+\subsection*{B)}
+
+\subsection*{C)}
+
+\subsection*{D)}
+We chose to implement a network with one hidden layer, the input layer uses $8$ neurons to match the 8-dimensional state of the problem. The hidden layer had the size of $50$ neurons. The optimizer chosen was the Adam optimizer as it was suggested for these types of problems. The clipping value was set to $1$.\\% after performing tests of the clipping value between $0.5 - 2$. 
+
+\noindent The size of the experience replay buffer parameter $L$ was chosen to $20000$ after iterating through values between $5000 - 30000$. The parameter $N$, i.e. the size of the training batch were chosen to $24$ to match the complexity of our problem, as it generally is in the order of $4 - 128$.
+The update frequency of the target network, $C$, were chosen to be $C = L/N$ as it is the general suggestion for the update frequency. The number of episodes $T_E$ where iterated between $100$ to $1000$, and the chosen value were $600$. The number of episodes were chosen to $600$ because no significant performance inrease where found for more episodes, also when training the neural network to long it starts forgetting. $\epsilon$ were chosen to exponentially decay between the values of $0.99$ and $0.05$. The discount factor $\gamma$ was set to $0.99$. 
+
+\subsection*{E)}
+\subsubsection{1)}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Lab_2/}
+    \caption{\small Illustration of the policy for one run, where Player: 1 and Minotaur: 1 is the position for time t=1, etc. }
+    \label{fig:Policy}
+\end{figure}
+\subsection*{F)}
+
+\subsection*{G)}
+
+\subsection*{H)}
+
+
+
+
+\end{document}
