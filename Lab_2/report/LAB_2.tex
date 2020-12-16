@@ -30,7 +30,7 @@
         Deep Q-Networks (DQN)}
 \subsection*{A)}
 
-\subsection*{B)} In a DQN a replay buffer is used to stabilize the learning process. By mixing previous with new experience to make the network train on a mixed expenses rather then only consider new experience. This is done before the update of the neural network, to decorrelation the training samples for each batch. The target network is used to have a stable action value too compare to, instead of updating after every step we update at every $C$-step and thus we have a stable target network too compare to.
+\subsection*{B)} In a DQN a replay buffer is used to stabilize the learning process. By mixing previous with new experience to make the network train on a mixed expenses rather then only consider new experience. This is done before the update of the neural network, to decorrelation the training samples for each batch. The target network is used to have a stable target values too compare to, instead of updating after every step we update at every $C$-step and thus we have a stable copy of the network(target network) too compare to.
 \subsection*{C)}
 
 \subsection*{D)}
@@ -65,13 +65,22 @@ When using $\gamma_1$ the lander mostly took the approach of hovering, due to no
 \end{figure}
 
 \subsubsection*{3)}
-When using 1000 episodes the average reward does not decrease, i.e. no catastrophic memory loss, but it does not have any significant improvement either see Figure \ref{fig:episodes1000}.
+When using 1000 episodes the average reward does not decrease, i.e. no catastrophic memory loss, but it does not have any significant improvement either see Figure \ref{fig:episodes1000}. When increasing the buffer size to $5000$, a decrease in the average reward is obtained, see Figure \ref{fig:buffer5000}. The training process also seems to be more stable, at least for the first $350$ episodes. But it fluctuates more in its behaviours due to it more frequently fills its buffer with new experiences.  
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{Lab_2/problem1/images/episodes1000.png}
     \caption{\small Total episodic reward and the number of steps taken per episodes during training, trained for 1000 episodes. }
     \label{fig:episodes1000}
 \end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Lab_2/problem1/images/buffer5000.png}
+    \caption{\small Total episodic reward and the number of steps taken per episodes during training, trained for 1000 episodes. With a buffer size of $5000$. }
+    \label{fig:buffer5000}
+\end{figure}
+
 
 \subsection*{F)}
 
