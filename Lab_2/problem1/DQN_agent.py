@@ -36,8 +36,6 @@ class MyNetwork(nn.Module):
         self.input_layer_activation = nn.ReLU()
         self.hidden_layer = nn.Linear(50, 50)
         self.hidden_layer_activation = nn.ReLU()
-        self.hidden_layer = nn.Linear(50, 50)
-        self.hidden_layer_activation = nn.ReLU()
 
         # Create output layer
         self.output_layer = nn.Linear(50, output_size)

@@ -95,7 +95,7 @@ buffer = ExperienceReplayBuffer(maximum_length=L)
 
 # Parameters
 N_episodes = 600                            # Number of episodes
-discount_factor = 0.985                      # Value of the discount factor
+discount_factor = 1                    # Value of the discount factor
 n_ep_running_average = 50                    # Running average of 50 episodes
 n_actions = env.action_space.n               # Number of available actions
 dim_state = len(env.observation_space.high)  # State dimensionality
