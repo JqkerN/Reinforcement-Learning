@@ -30,7 +30,7 @@
         Deep Q-Networks (DQN)}
 \subsection*{A)}
 
-\subsection*{B)}
+\subsection*{B)} In a DQN a replay buffer is used to stabilize the training process. This is done before the update of the neural network, by decorrelation of the training samples for each batch. 
 
 \subsection*{C)}
 
@@ -41,13 +41,21 @@ We chose to implement a network with one hidden layer, the input layer uses $8$ 
 The update frequency of the target network, $C$, were chosen to be $C = L/N$ as it is the general suggestion for the update frequency. The number of episodes $T_E$ where iterated between $100$ to $1000$, and the chosen value were $600$. The number of episodes were chosen to $600$ because no significant performance inrease where found for more episodes, also when training the neural network to long it starts forgetting. $\epsilon$ were chosen to exponentially decay between the values of $0.99$ and $0.05$. The discount factor $\gamma$ was set to $0.99$. 
 
 \subsection*{E)}
-\subsubsection{1)}
+\subsubsection*{1)}
+As can be seen in Figure \ref{fig:Policy} the total reward goes up for the training and stops to decrease after approximately 580 episodes. The number of steps does also steady decrease after 200 episodes. Where the hyperparameters where selected as described under Section D.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{Lab_2/}
-    \caption{\small Illustration of the policy for one run, where Player: 1 and Minotaur: 1 is the position for time t=1, etc. }
+    \includegraphics[width=1\textwidth]{Lab_2/problem1/images/First_run.png}
+    \caption{\small Total episodic reward and the number of steps taken per episodes during training for the final optimized policy. }
     \label{fig:Policy}
 \end{figure}
+
+\subsubsection*{2)}
+
+
+\subsubsection*{3)}
+
+
 \subsection*{F)}
 
 \subsection*{G)}
