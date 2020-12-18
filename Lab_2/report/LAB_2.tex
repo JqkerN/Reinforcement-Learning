@@ -28,15 +28,24 @@
 
 \section*{Problem 1: \\
         Deep Q-Networks (DQN)}
-\subsection*{A)}
 
-\subsection*{B)} In a DQN a replay buffer is used to stabilize the learning process. By mixing previous with new experience to make the network train on a mixed expenses rather then only consider new experience. This is done before the update of the neural network, to decorrelation the training samples for each batch. The target network is used to have a stable target values too compare to, instead of updating after every step we update at every $C$-step and thus we have a stable copy of the network(target network) too compare to.
+\subsection*{B)} In a DQN a replay buffer is used to stabilize the learning process. By mixing previous with new experience to make the network train on a mixed experiences rather then only consider new experience. This is done before the update of the neural network, to decorrelation the training samples for each batch. The target network is used to have a stable target values too compare to, instead of updating after every step we update at every $C$-step and thus we have a stable copy of the network(target network) too compare to.
+
 \subsection*{C)}
+Requirements fulfilled as can be seen in Figure \ref{fig:passed_test}, with an total reward of $141.1 \pm 28.9$ with the confidence of $95 \%$.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Lab_2/problem1/images/passed_test.png}
+    \caption{\small Average total reward over 50 points on average over 50 episodes - test passed. }
+    \label{fig:passed_test}
+\end{figure}
+
+
 
 \subsection*{D)}
 We chose to implement a network with one hidden layer, the input layer uses $8$ neurons to match the 8-dimensional state of the problem. The hidden layer had the size of $50$ neurons. The optimizer chosen was the Adam optimizer as it was suggested for these types of problems. The clipping value was set to $1$.\\
 \noindent The size of the experience replay buffer parameter $L$ was chosen to $20000$ after iterating through values between $5000 - 30000$. The parameter $N$, i.e. the size of the training batch were chosen to $24$ to match the complexity of our problem, as it generally is in the order of $4 - 128$.
-The update frequency of the target network, $C$, were chosen to be $C = L/N$ as it is the general suggestion for the update frequency. The number of episodes $T_E$ where iterated between $100$ to $1000$, and the chosen value were $600$. The number of episodes were chosen to $600$ because no significant performance inrease where found for more episodes, also when training the neural network to long it starts forgetting. $\epsilon$ were chosen to exponentially decay between the values of $0.99$ and $0.05$. The discount factor $\gamma$ was set to $0.99$. 
+The update frequency of the target network, $C$, were chosen to be $C = L/N$ as it is the general suggestion for the update frequency. The number of episodes $T_E$ where iterated between $100$ to $1000$, and the chosen value were $600$. The number of episodes were chosen to $600$ because no significant performance increase where found for more episodes, also when training the neural network to long it starts forgetting. $\epsilon$ were chosen to exponentially decay between the values of $0.99$ and $0.05$. The discount factor $\gamma$ was set to $0.99$. 
 
 \subsection*{E)}
 \subsubsection*{1)}
@@ -49,11 +58,11 @@ As can be seen in Figure \ref{fig:Policy} the total reward goes up for the train
 \end{figure}
 
 \subsubsection*{2)}
-When using $\gamma_1$ the lander mostly took the approach of hovering, due to no punishment of rewards far in the future see Figure \ref{fig:gamma1}. A too low gamma, such as $\gamma_2$, the lander took a too aggressive approach of descent which resulted in a less satisfying reward score see Figure \ref{fig:gamma0.2}.
+ When using $\gamma_1$ the lander mostly took the approach of hovering, due to infinity sum of rewards from far in the future see Figure \ref{fig:gamma1}. A too low gamma, such as $\gamma_2$, the lander took a too aggressive approach of descent which resulted in a less satisfying reward score see Figure \ref{fig:gamma0.2}.
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{Lab_2/problem1/images/gamma_1.png}
-    \caption{\small Total episodic reward and the number of steps taken per episodes during training with $\gamma_1$. . }
+    \caption{\small Total episodic reward and the number of steps taken per episodes during training with $\gamma_1$.  }
     \label{fig:gamma1}
 \end{figure}
 
@@ -83,28 +92,34 @@ When using 1000 episodes the average reward does not decrease, i.e. no catastrop
 
 
 \subsection*{F)}
+\subsubsection*{1)}
+The $\max_a Q_\theta(s(y,\omega),a)$ for the state $S(y,\omega) = (0,y,0,0,\omega,0,0,0)$ with $\omega \in [-\pi,\pi] $ and $y \in [0, 1.5]$, see Figure \ref{fig:Q_value}, the highest values where proportional to the angel of the lander. Also there were a small incline depending on the height from the ground of the lander. 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{Lab_2/problem1/images/Q_value.png}
-    \caption{\small FILL IN}
+    \caption{\small the Q values with $\omega \in [-\pi,\pi] $ and $y \in [0, 1.5]$.}
     \label{fig:Q_value}
 \end{figure}
 
-\subsection*{G)}
+\subsubsection*{2)}
+The $\argmax_a Q_\theta(s(y,\omega),a)$ for the state $S(y,\omega) = (0,y,0,0,\omega,0,0,0)$ with $\omega \in [-\pi,\pi] $ and $y \in [0, 1.5]$, see Figure \ref{fig:Q_action}, one could notice that the lander compensates with the left and right motor depending on the angle of the lander. One interesting finding is that the lander does not activate the main motor in any of the states.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{Lab_2/problem1/images/Q_action.png}
-    \caption{\small FILL IN }
+    \caption{\small the Q actions with $\omega \in [-\pi,\pi] $ and $y \in [0, 1.5]$.}
     \label{fig:Q_action}
 \end{figure}
 
-\subsection*{H)}
+\subsection*{G)}
+If comparing Figure \ref{fig:Policy} to Figure \ref{fig:randomAgent}, we see that the total average reward over 50 episodes for the RandomAgent is approximately $-210$ while our Q-network has a total average reward of $141$. The comparison also shows that the RandomAgent does not learn and improve its reward during the whole period of episodes.
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{Lab_2/problem1/images/randomAgent.png}
-    \caption{\small FILL IN }
+    \caption{\small FTotal episodic reward and the number of steps taken per episodes during training for the RandomAgent.  }
     \label{fig:randomAgent}
 \end{figure}
+
 
 
 
