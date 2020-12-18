@@ -49,10 +49,10 @@ The update frequency of the target network, $C$, were chosen to be $C = L/N$ as 
 
 \subsection*{E)}
 \subsubsection*{1)}
-As can be seen in Figure \ref{fig:Policy} the total reward goes up for the training and stops to decrease after approximately 580 episodes. The number of steps does also steady decrease after 200 episodes. Where the hyperparameters where selected as described under Section D.
+As can be seen in Figure \ref{fig:Policy} the total reward goes up for the training and reaches a peak at 600 episodes. The number of steps does also steady decrease after 200 episodes. Where the hyperparameters where selected as described under Section D.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{Lab_2/problem1/images/main_network.png}
+    \includegraphics[width=1\textwidth]{Lab_2/problem1/images/main_network_2.png}
     \caption{\small Total episodic reward and the number of steps taken per episodes during training for the final optimized policy. }
     \label{fig:Policy}
 \end{figure}
@@ -96,7 +96,7 @@ When using 1000 episodes the average reward does not decrease, i.e. no catastrop
 The $\max_a Q_\theta(s(y,\omega),a)$ for the state $S(y,\omega) = (0,y,0,0,\omega,0,0,0)$ with $\omega \in [-\pi,\pi] $ and $y \in [0, 1.5]$, see Figure \ref{fig:Q_value}, the highest values where proportional to the angel of the lander. Also there were a small incline depending on the height from the ground of the lander. 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{Lab_2/problem1/images/Q_value.png}
+    \includegraphics[width=1\textwidth]{Lab_2/problem1/images/Q_values_2.png}
     \caption{\small the Q values with $\omega \in [-\pi,\pi] $ and $y \in [0, 1.5]$.}
     \label{fig:Q_value}
 \end{figure}
@@ -106,8 +106,7 @@ The $\argmax_a Q_\theta(s(y,\omega),a)$ for the state $S(y,\omega) = (0,y,0,0,\o
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{Lab_2/problem1/images/Q_action.png}
-    \caption{\small the Q actions with $\omega \in [-\pi,\pi] $ and $y \in [0, 1.5]$.}
+    \includegraphics[width=1\textwidth]{Lab_2/problem1/images/Q_action_2.png}    \caption{\small the Q actions with $\omega \in [-\pi,\pi] $ and $y \in [0, 1.5]$.}
     \label{fig:Q_action}
 \end{figure}
 
