@@ -79,7 +79,7 @@ def running_average(x, N):
         y = np.zeros_like(x)
     return y
 
-
+"""
 
 EPSILON_MAX = 0.99
 EPSILON_MIN = 0.05
@@ -91,7 +91,7 @@ env.reset()
 
 
 ### Create Experience replay buffer ###
-L = 5000
+L = 20000
 buffer = ExperienceReplayBuffer(maximum_length=L)
 
 # Parameters
@@ -175,16 +175,7 @@ for k in EPISODES:
         running_average(episode_number_of_steps, n_ep_running_average)[-1]))
 
 
-
-
-
-
 torch.save(agent.network, 'neural-network-avg_'+str(running_average(episode_reward_list, n_ep_running_average)[-1])+'.pth')
-
-
-
-
-
 
 
 # Plot Rewards and steps
@@ -207,3 +198,4 @@ ax[1].set_title('Total number of steps vs Episodes')
 ax[1].legend()
 ax[1].grid(alpha=0.3)
 plt.show()
+"""
