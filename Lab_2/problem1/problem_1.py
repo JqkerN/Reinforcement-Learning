@@ -1,3 +1,14 @@
+"""
+    KTH: EL2805 Reinforcement Learning 
+               December 2020
+                Problem 2
+
+                Arthurs: 
+Ilian Corneliussen  950418-2438  ilianc@kth.se
+Daniel Hirsch       960202-5737  dhirsch@kth.se   
+"""
+
+
 import numpy as np
 import gym
 import torch
@@ -133,7 +144,7 @@ def F():
     """
     # Load model
     try:
-        model = torch.load('neural-network-avg_203.pth')
+        model = torch.load('neural-network-1.pth')
         print('Network model: {}'.format(model))
     except:
         print('File neural-network-1.pth not found!')
